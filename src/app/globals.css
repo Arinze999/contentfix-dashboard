@@ -1,26 +1,275 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  font-family: var(--font-poppins);
+  scroll-behavior: smooth;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* helper class for Inter font */
+.font-inter {
+  font-family: var(--font-inter), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.gradient1 {
+  background: var(--color-gradient1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient2 {
+  background: var(--color-gradient2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient3 {
+  background: var(--color-gradient3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient4 {
+  background: var(--color-gradient4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient5 {
+  background: var(--color-gradient5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient6 {
+  background: var(--color-gradient6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient7 {
+  background: var(--color-gradient7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient8 {
+  background: var(--color-gradient8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradientBg {
+  background: var(--color-gradientBg);
+}
+
+.gradientBg2 {
+  background: var(--color-gradientBg2);
+}
+
+.gradientBg2-1 {
+  background: var(--color-gradientBg2-1);
+}
+
+.gradientBg3 {
+  background: var(--color-gradientBg3);
+}
+
+.gradientBgBtn {
+  background: var(--color-gradientBgBtn);
+}
+
+.gradientBgBtn2 {
+  background: var(--color-gradientBgBtn2);
+}
+
+.gradientBgBtn3 {
+  background: var(--color-gradientBgBtn3);
+}
+
+.gradientBorder {
+  border-color: var(--color-gradientBgBtn);
+}
+
+@theme {
+  --breakpoint-3xl: 120rem;
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  /* ... */
+
+  /* Custom Colors */
+  --color-gradient1: linear-gradient(
+    160deg,
+    #8b5cf6 0%,
+    #ec4899 33%,
+    #f59e0b 67%,
+    #10b981 100%
+  );
+  --color-gradient2: linear-gradient(to right, #9333ea 0%, #db2777 100%);
+  --color-gradient3: linear-gradient(to right, #6366f1 0%, #a855f7 100%);
+  --color-gradient4: linear-gradient(to right, #ec4899 0%, #f43f5e 100%);
+  --color-gradient5: linear-gradient(to right, #3b82f6 0%, #06b6d4 100%);
+  --color-gradient6: linear-gradient(to right, #22c55e 0%, #10b981 100%);
+  --color-gradient7: linear-gradient(to right, #f97316 0%, #ef4444 100%);
+  --color-gradient8: linear-gradient(to right, #c084fc 0%, #60a5fa 100%);
+  --color-gradientBg: linear-gradient(
+    -30deg,
+    #0f0f23 0%,
+    #1a1a3e 33%,
+    #2d1b69 67%,
+    #8b5cf6 100%
+  );
+  --color-gradientBg2: linear-gradient(
+    0deg,
+    #0f172a 0%,
+    #020617 50%,
+    #000000 100%
+  );
+  --color-gradientBg2-1: linear-gradient(
+    180deg,
+    #0f172a 30%,
+    #020617 50%,
+    #000000 100%
+  );
+  --color-gradientBg3: linear-gradient(
+    120deg,
+    #581c87 0%,
+    #1e3a8a 50%,
+    #312e81 100%
+  );
+  --color-gradientBgBtn: linear-gradient(120deg, #9333ea 0%, #db2777 100%);
+  --color-gradientBgBtn2: linear-gradient(120deg, #3b82f6 0%, #06b6d4 100%);
+  --color-gradientBgBtn3: linear-gradient(120deg, #f97316 0%, #ef4444 100%);
+  --color-dark: #000000;
+  --color-lightBlue: #93c5fd;
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .col-center {
+    @apply flex flex-col justify-center items-center gap-4;
+  }
+  .col-start {
+    @apply flex flex-col gap-4;
+  }
+  .general-title {
+    @apply md:text-5xl text-2xl font-bold text-center;
+  }
+  .general-subtitle {
+    @apply md:text-lg text-center max-w-[850px];
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  } /* Chrome/Safari */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (min-width: 320px) {
+  .default-margin {
+    /* margin: 0 16px 0 16px; */
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .default-padding {
+    /* margin: 0 16px 0 16px; */
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .default-flex {
+    flex-direction: column;
+  }
 }
+
+@media (min-width: 768px) {
+  .default-margin {
+    /* margin: 0 20px 0 20px; */
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .default-padding {
+    /* margin: 0 16px 0 16px; */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (min-width: 1152px) {
+  .default-margin {
+    /* margin: 0 32px 0 32px; */
+    margin-left: 32px;
+    margin-right: 32px;
+  }
+
+  .default-padding {
+    /* margin: 0 16px 0 16px; */
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  .web-nav {
+    display: flex;
+  }
+}
+
+@media (min-width: 1440px) {
+  /* .mobile-nav {
+    display: none;
+  }
+  .nav-toggle {
+    display: none;
+  }
+  .web-nav {
+    display: flex;
+  } */
+}
+
+@media (min-width: 1920px) {
+  .default-margin {
+    /* margin: 0 220px 0 220px; */
+    margin-left: 220px;
+    margin-right: 220px;
+  }
+
+  .default-padding {
+    /* margin: 0 16px 0 16px; */
+    padding-left: 220px;
+    padding-right: 220px;
+  }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+

@@ -31,7 +31,7 @@ export async function getSessionAndResponse(request: NextRequest) {
 
             // NOTE: On localhost over http, `secure: true` cookies won't be set by the browser.
             // That's fine for deployed dashboard; for local dashboard you can conditionally relax:
-            // if (!isHttps) merged.secure = false;
+             if (!isHttps) merged.secure = false;
 
             response.cookies.set(name, value, merged);
           });

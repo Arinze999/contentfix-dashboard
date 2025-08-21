@@ -21,13 +21,21 @@ export async function signInAction(input: SignInInput) {
       password: input.password,
     });
 
-    console.log(data)
+    console.log(data);
 
     if (error) {
       return { ok: false, message: error.message };
     }
+                                                                                 
+    // SAFE user payload for client/Redux (no tokens)
+    const u = data.user;
+    const user = {
+      id: u?.id ?? null,
+      email: u?.email ?? null,
+      username: (u?.user_metadata as any)?.username ?? null,
+    };
 
-    return { ok: true, message: 'Signed in successfully.' };
+    return { ok: true, message: 'Signed in successfully.', user };
   } catch (e: any) {
     return { ok: false, message: e?.message ?? 'Unknown error' };
   }

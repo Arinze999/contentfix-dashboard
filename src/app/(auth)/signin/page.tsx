@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { FormComponent } from '@/components/form/FormComponent';
 import {
   PasswordInputField,
@@ -10,7 +10,7 @@ import ValidatingFormSubmitButton from '@/components/buttons/ValidatingFormSubmi
 import Button from '@/components/buttons/Button';
 import { Google } from '@/components/icons/Google';
 import Link from 'next/link';
-import { ACCOUNT, SIGN_UP } from '@/routes/routes';
+import { SIGN_UP } from '@/routes/routes';
 import {
   SigninDataType,
   SigninInitialValues,
@@ -18,15 +18,12 @@ import {
 } from '@/models/auth/SignIn.model';
 import { FormikHelpers } from 'formik';
 import { useSignIn } from '@/hooks/auth/useSignIn';
-import { signInAction } from '@/actions/signInAction';
-import { useRouter } from 'next/navigation';
+import { useServerSignIn } from '@/hooks/auth/server/useServerSignIn';
 
 const SignIn = () => {
   const { loading } = useSignIn();
 
-  const [serving, setServing] = useState(false);
-
-  const router = useRouter();
+  const { signIn, serving } = useServerSignIn();
 
   // const handleSubmit = (
   //   values: SigninDataType,
@@ -41,25 +38,8 @@ const SignIn = () => {
     values: SigninDataType,
     actions: FormikHelpers<SigninDataType>
   ) => {
-    setServing(true);
-    try {
-      const result = await signInAction(values);
-
-      if (result.ok) {
-        alert(result.message); // success feedback
-        router.refresh();
-        router.push(`/${ACCOUNT}`);
-      } else {
-        alert(`Sign up failed: ${result.message}`);
-        actions.setFieldError('identifier', result.message);
-      }
-
-      actions.resetForm({ values: SigninInitialValues });
-    } catch (err: any) {
-      alert(`Unexpected error: ${err?.message ?? 'Something went wrong'}`);
-    } finally {
-      setServing(false);
-    }
+    await signIn(values);
+    actions.resetForm({ values: SigninInitialValues });
   };
 
   return (
@@ -87,7 +67,7 @@ const SignIn = () => {
       />
       <hr className="border-white/30 border-1 w-full my-3" />
       <div className="text-sm">
-        Don't have an account?
+        Don't have an account?{' '}
         <Link className="text-blue-500 underline" href={`/${SIGN_UP}`}>
           Sign Up
         </Link>

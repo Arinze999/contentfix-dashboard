@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
+import ReduxProvider from '@/redux/ReduxProvider';
+import { createClient } from '@/utils/supabase/server';
+import HydrateAuth from '@/components/HydrateAuth';
+
+export const dynamic = 'force-dynamic'; 
+export const revalidate = 0;
 
 const poppins = Poppins({
   weight: ['400'],
@@ -49,19 +55,30 @@ export const metadata: Metadata = {
     description:
       'Use the ContentFix Dashboard to organize conversions, review history, and generate fresh posts for any platform.',
     images: ['https://contentfix-dashboard.vercel.app/twitter-card.png'],
-    creator: '@your_twitter_handle', // replace with your handle
+    creator: '@your_twitter_handle', 
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+
+  const safeUser = {
+    id: data.user?.id ?? null,
+    email: data.user?.email ?? null,
+    username: (data.user?.user_metadata as any)?.username ?? null,
+  };
+
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable} antialiased`}>
-        {children}
+        <ReduxProvider>
+          <HydrateAuth user={safeUser} /> {children}
+        </ReduxProvider>
       </body>
     </html>
   );

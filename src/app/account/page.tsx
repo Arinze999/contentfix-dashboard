@@ -1,7 +1,16 @@
+'use client'
+
+import { useAppSelector } from '@/redux/store';
 import React from 'react';
 
 const AccountPage = () => {
-  return <div>AccountPage</div>;
+  const auth = useAppSelector((state) => state.auth);
+
+  return (
+    <div>
+      AccountPage <div>{auth.username}</div>
+    </div>
+  );
 };
 
 export default AccountPage;

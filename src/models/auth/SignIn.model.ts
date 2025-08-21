@@ -26,3 +26,7 @@ export const SigninInitialValues: SigninDataType = {
   identifier: '',
   password: '',
 };
+
+export type AuthUser = { id: string | null; email: string | null; username: string | null };
+
+export const initialState: AuthUser = { id: null, email: null, username: null };

@@ -1,20 +1,19 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
-const ALLOW_ORIGIN =
-  process.env.LANDING_ORIGIN ?? 'https://contentfix-landing.vercel.app';
-
-const DEV_ORIGIN =
-  process.env.LANDING_DEV ?? 'https://contentfix-landing.vercel.app';
+const ALLOWLIST = new Set([
+  process.env.LANDING_ORIGIN ?? 'https://contentfix-landing.vercel.app',
+  process.env.LANDING_DEV ?? 'http://localhost:3000', // ← make sure this is localhost in dev
+]);
 
 function corsHeaders(origin?: string) {
-  const allowOrigin = origin && origin === ALLOW_ORIGIN ? origin : DEV_ORIGIN;
+  const ok = origin && ALLOWLIST.has(origin);
+  const allowOrigin = ok ? origin! : 'null'; // or skip and 403
   return {
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Methods': 'GET,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    // Avoid caching auth state
     'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
     Vary: 'Origin',
   };

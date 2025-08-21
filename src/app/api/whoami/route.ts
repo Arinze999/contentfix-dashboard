@@ -4,8 +4,11 @@ import { createClient } from '@/utils/supabase/server';
 const ALLOW_ORIGIN =
   process.env.LANDING_ORIGIN ?? 'https://contentfix-landing.vercel.app';
 
+const DEV_ORIGIN =
+  process.env.LANDING_DEV ?? 'https://contentfix-landing.vercel.app';
+
 function corsHeaders(origin?: string) {
-  const allowOrigin = origin && origin === ALLOW_ORIGIN ? origin : ALLOW_ORIGIN;
+  const allowOrigin = origin && origin === ALLOW_ORIGIN ? origin : DEV_ORIGIN;
   return {
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Credentials': 'true',

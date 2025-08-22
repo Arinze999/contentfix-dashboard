@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 
 export async function signUpAction(input: {
   userName: string;
-  identifier: string;
+  identifier: string; // email or phone
   password: string;
   avatarUrl?: string;
 }) {
@@ -27,21 +27,37 @@ export async function signUpAction(input: {
       },
     });
 
-     console.log(data)
-
+    // --- classify outcome (no resend logic) ---
     if (error) {
-      return { ok: false, message: error.message };
+      return { ok: false, status: 400, message: error.message };
     }
 
-    // Return a message to the client; show alerts in the client UI.
+    const user = data?.user as any;
+    const identitiesLen = Array.isArray(user?.identities)
+      ? user.identities.length
+      : 0;
+
+    // Duplicate: Supabase returns a "user" with empty identities
+    if (user && identitiesLen === 0) {
+      return {
+        ok: false,
+        status: 409,
+        message: usingEmail
+          ? 'This email is already registered.'
+          : 'This phone is already registered.',
+      };
+    }
+
+    // New account created (requires verification)
     return {
       ok: true,
+      status: 201,
       message: usingEmail
         ? 'Account created. Please verify your email.'
         : 'Account created. Please check SMS for verification.',
     };
   } catch (e: any) {
-    return { ok: false, message: e?.message ?? 'Unknown error' };
+    return { ok: false, status: 500, message: e?.message ?? 'Unknown error' };
   }
 }
 

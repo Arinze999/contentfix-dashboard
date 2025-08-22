@@ -19,6 +19,7 @@ import {
 import { FormikHelpers } from 'formik';
 import { useSignIn } from '@/hooks/auth/useSignIn';
 import { useServerSignIn } from '@/hooks/auth/server/useServerSignIn';
+import { signInWithGoogle } from '@/actions/signInGoogleAction';
 
 const SignIn = () => {
   const { loading } = useSignIn();
@@ -64,6 +65,7 @@ const SignIn = () => {
         text="Sign in with Google"
         className="bg-white text-black w-full py-2 rounded-md"
         icon={<Google />}
+        onClick={signInWithGoogle}
       />
       <hr className="border-white/30 border-1 w-full my-3" />
       <div className="text-sm">

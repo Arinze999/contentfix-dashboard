@@ -3,43 +3,58 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { ACCOUNT, SIGN_IN } from '@/routes/routes';
 
-export const dynamic = 'force-dynamic'; // ensure this route isn't statically optimized
+export const dynamic = 'force-dynamic';
 
-const SIGNIN_PATH = `/${SIGN_IN}`;
-const DEFAULT_NEXT = `/${ACCOUNT}`;
+const SIGNIN_PATH = SIGN_IN.startsWith('/') ? SIGN_IN : `/${SIGN_IN}`;
+const DEFAULT_NEXT = ACCOUNT.startsWith('/') ? ACCOUNT : `/${ACCOUNT}`;
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const origin = url.origin;
 
-  const code  = url.searchParams.get('code');
-  const err   = url.searchParams.get('error');
+  // Normalize & validate inputs
+  const code = url.searchParams.get('code');
+  const errParam =
+    url.searchParams.get('error') ||
+    url.searchParams.get('error_code') ||
+    undefined;
   const errDesc = url.searchParams.get('error_description') || undefined;
 
-  // only allow relative "next" targets
   const rawNext = url.searchParams.get('next');
   const next = rawNext && rawNext.startsWith('/') ? rawNext : DEFAULT_NEXT;
 
-  // If Google/Supabase sent an error or we don't have a code → go back to sign-in
-  if (err) {
-    return NextResponse.redirect(`${origin}${SIGNIN_PATH}?error=${encodeURIComponent(errDesc || err)}`);
+  // Provider returned an error or we have no code → back to sign-in
+  if (errParam) {
+    return NextResponse.redirect(
+      `${origin}${SIGNIN_PATH}?error=${encodeURIComponent(errDesc || errParam)}`
+    );
   }
   if (!code) {
     return NextResponse.redirect(`${origin}${SIGNIN_PATH}?error=missing_code`);
   }
 
+  // Exchange the auth code for a session and set Supabase cookies
   const supabase = await createClient();
 
-  // Exchange the auth code for a Supabase session (sets Supabase cookies via the helper)
-  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-  // (In some helper versions the signature is: exchangeCodeForSession({ authCode: code }))
-
-  if (error || !data?.session) {
-    return NextResponse.redirect(`${origin}${SIGNIN_PATH}?error=oauth_exchange`);
+  let data: any, error: any;
+  try {
+    const exchange = supabase.auth.exchangeCodeForSession as any;
+    // Some versions take (code: string), others ({ authCode: string })
+    ({ data, error } =
+      exchange.length === 1
+        ? await exchange(code)
+        : await exchange({ authCode: code }));
+  } catch (e) {
+    error = e;
   }
 
-  // OPTIONAL: set your own root-domain cookie for sharing session across apps
-  // e.g., between landing and dashboard. If you don't need this, delete this block.
+  if (error || !data?.session) {
+    return NextResponse.redirect(
+      `${origin}${SIGNIN_PATH}?error=oauth_exchange`
+    );
+  }
+
+  // Optional: cross-subdomain cookie (remove if you don't need it)
   const res = NextResponse.redirect(new URL(next, origin));
   if (process.env.ROOT_DOMAIN) {
     res.cookies.set('cf_session', data.session.access_token, {
@@ -47,7 +62,7 @@ export async function GET(req: Request) {
       secure: true,
       sameSite: 'lax',
       path: '/',
-      domain: process.env.ROOT_DOMAIN, // like ".contentfix.xyz"
+      domain: process.env.ROOT_DOMAIN, // e.g. ".yourdomain.com"
       maxAge: data.session.expires_in, // seconds
     });
   }

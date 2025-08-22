@@ -1,20 +1,18 @@
-// app/actions/auth.ts
 'use server';
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import { SIGN_IN } from '@/routes/routes';
 
+function getSiteUrl() {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return 'http://localhost:3000';
+}
 function getRedirectURL() {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000');
-  return `${base}/auth/callback`;
+  return `${getSiteUrl()}/auth/callback`;
 }
 
-// Option A: server-side redirect immediately
 export async function signInWithGoogle() {
   const supabase = await createClient();
 
@@ -22,15 +20,17 @@ export async function signInWithGoogle() {
     provider: 'google',
     options: {
       redirectTo: getRedirectURL(),
-      // optional but useful:
-      queryParams: { prompt: 'consent', access_type: 'offline' },
+      queryParams: {
+        prompt: 'consent',
+        access_type: 'offline',
+        include_granted_scopes: 'true',
+      },
     },
   });
 
-  if (error || !data?.url) {
-    redirect(`/${SIGN_IN}?error=oauth_init`);
-  }
+  const signinPath = SIGN_IN.startsWith('/') ? SIGN_IN : `/${SIGN_IN}`;
+  if (error || !data?.url) redirect(`${signinPath}?error=oauth_init`);
 
-  // Jumps to Google
+  // Next.js server actions can redirect to external URLs; this will jump to Google.
   redirect(data.url);
 }

@@ -21,6 +21,7 @@ export async function signUpAction(input: {
       password: input.password,
       options: {
         data: {
+          full_name: input.userName || undefined,
           username: input.userName || undefined,
           avatar_url: input.avatarUrl || undefined,
         },

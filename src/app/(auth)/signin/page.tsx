@@ -10,7 +10,7 @@ import ValidatingFormSubmitButton from '@/components/buttons/ValidatingFormSubmi
 import Button from '@/components/buttons/Button';
 import { Google } from '@/components/icons/Google';
 import Link from 'next/link';
-import { SIGN_UP } from '@/routes/routes';
+import { ACCOUNT, SIGN_UP } from '@/routes/routes';
 import {
   SigninDataType,
   SigninInitialValues,
@@ -43,6 +43,10 @@ const SignIn = () => {
     actions.resetForm({ values: SigninInitialValues });
   };
 
+  const handleGoogle = () => {
+    signInWithGoogle(`/${ACCOUNT}`);
+  };
+
   return (
     <div className="border-white/20 md:shadow-md rounded-2xl w-full max-w-2xl md:p-10 col-center gap-10">
       <h3 className="text-2xl md:text-4xl font-bold">Sign In</h3>
@@ -65,7 +69,7 @@ const SignIn = () => {
         text="Sign in with Google"
         className="bg-white text-black w-full py-2 rounded-md"
         icon={<Google />}
-        onClick={signInWithGoogle}
+        onClick={handleGoogle}
       />
       <hr className="border-white/30 border-1 w-full my-3" />
       <div className="text-sm">

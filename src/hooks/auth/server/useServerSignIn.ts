@@ -36,7 +36,7 @@ export function useServerSignIn(opts: UseServerSignInOptions = {}) {
 
         //navigate
         router.refresh();
-        router.push(`/${opts.redirectTo ?? ACCOUNT}`);
+        router.replace(`/${opts.redirectTo ?? ACCOUNT}`);
       } catch (err: any) {
         if (!opts.silent)
           alert(`Unexpected error: ${err?.message ?? 'Something went wrong'}`);

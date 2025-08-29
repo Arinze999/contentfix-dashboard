@@ -18,8 +18,15 @@ const AccountPage = () => {
 
   return (
     <div>
-      AccountPage <div>{auth.username}</div>
-      <p>Hi {loading ? 'loading....' : userData.username}</p>
+      AccountPage <div>{}</div>
+      <p>
+        Hi{' '}
+        {loading
+          ? 'loading....'
+          : auth?.username
+          ? auth.username
+          : userData.username}
+      </p>
       <SignOutButton />
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormComponent } from '@/components/form/FormComponent';
 import {
   PasswordInputField,
@@ -20,11 +20,33 @@ import { FormikHelpers } from 'formik';
 import { useSignIn } from '@/hooks/auth/useSignIn';
 import { useServerSignIn } from '@/hooks/auth/server/useServerSignIn';
 import { signInWithGoogle } from '@/actions/signInGoogleAction';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 const SignIn = () => {
   const { loading } = useSignIn();
 
   const { signIn, serving } = useServerSignIn();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    const check = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) router.replace('/');
+    };
+    check();
+
+    // re-check when page is restored from bfcache via back button
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) check();
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, [router]);
 
   // const handleSubmit = (
   //   values: SigninDataType,

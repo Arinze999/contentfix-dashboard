@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { FormComponent } from '@/components/form/FormComponent';
 import {
   SignupDataType,
@@ -18,15 +18,12 @@ import Link from 'next/link';
 import { SIGN_IN } from '@/routes/routes';
 import { FormikHelpers } from 'formik';
 import { useSignup } from '@/hooks/auth/useSignUp';
-import { signUpAction } from '@/actions/signUpAction';
-import { useRouter } from 'next/navigation';
+import { useServerSignUp } from '@/hooks/auth/server/useServerSignUp';
 
 const SignUp = () => {
   const { loading } = useSignup();
 
-  const [serving, setServing] = useState(false);
-
-  const router = useRouter();
+  const { signUp, serving } = useServerSignUp();
 
   // const handleSubmit = (
   //   values: SignupDataType,
@@ -42,24 +39,8 @@ const SignUp = () => {
     values: SignupDataType,
     actions: FormikHelpers<SignupDataType>
   ) => {
-    setServing(true);
-    try {
-      const result = await signUpAction(values);
-
-      if (result.ok) {
-        alert(result.message); // success feedback
-        router.refresh();
-      } else {
-        alert(`Sign up failed: ${result.message}`);
-        actions.setFieldError('identifier', result.message);
-      }
-
-      actions.resetForm({ values: SignupInitialValues });
-    } catch (err: any) {
-      alert(`Unexpected error: ${err?.message ?? 'Something went wrong'}`);
-    } finally {
-      setServing(false);
-    }
+    await signUp(values);
+    actions.resetForm({ values: SignupInitialValues });
   };
 
   return (

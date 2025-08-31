@@ -4,8 +4,10 @@ import './globals.css';
 import ReduxProvider from '@/redux/ReduxProvider';
 import { createClient } from '@/utils/supabase/server';
 import HydrateAuth from '@/components/HydrateAuth';
+import Toaster from '@/components/Toaster';
+import FlashToast from '@/components/FlashToast';
 
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 const poppins = Poppins({
@@ -55,7 +57,7 @@ export const metadata: Metadata = {
     description:
       'Use the ContentFix Dashboard to organize conversions, review history, and generate fresh posts for any platform.',
     images: ['https://contentfix-dashboard.vercel.app/twitter-card.png'],
-    creator: '@your_twitter_handle', 
+    creator: '@your_twitter_handle',
   },
 };
 
@@ -78,6 +80,8 @@ export default async function RootLayout({
       <body className={`${poppins.variable} ${inter.variable} antialiased`}>
         <ReduxProvider>
           <HydrateAuth user={safeUser} /> {children}
+          <Toaster />
+          <FlashToast />
         </ReduxProvider>
       </body>
     </html>

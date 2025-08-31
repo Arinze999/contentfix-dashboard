@@ -155,8 +155,8 @@ body {
   --color-gradientBgBtn: linear-gradient(120deg, #9333ea 0%, #db2777 100%);
   --color-gradientBgBtn2: linear-gradient(120deg, #3b82f6 0%, #06b6d4 100%);
   --color-gradientBgBtn3: linear-gradient(120deg, #f97316 0%, #ef4444 100%);
-  --color-dark: #000000;
-  --color-lightBlue: #93c5fd;
+  --color-dark: #041C4D;
+  --color-lightBlue: #85D5F6;
 }
 
 @layer utilities {

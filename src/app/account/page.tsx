@@ -17,7 +17,7 @@ const AccountPage = () => {
   }, [auth?.id, fetchUserData]);
 
   return (
-    <div>
+    <div className="bg-dark text-white">
       AccountPage <div>{}</div>
       <p>
         Hi{' '}

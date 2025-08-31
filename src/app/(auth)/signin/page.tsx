@@ -19,14 +19,19 @@ import {
 import { FormikHelpers } from 'formik';
 import { useSignIn } from '@/hooks/auth/useSignIn';
 import { useServerSignIn } from '@/hooks/auth/server/useServerSignIn';
-import { signInWithGoogle } from '@/actions/signInGoogleAction';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { useSignInWithGoogle } from '@/hooks/auth/useSignInWithGoogle';
 
 const SignIn = () => {
   const { loading } = useSignIn();
 
   const { signIn, serving } = useServerSignIn();
+
+  const { startGoogle } = useSignInWithGoogle({
+    next: `/${ACCOUNT}`,
+  });
+  // <button onClick={startGoogle} disabled={serving}>Continue with Google</button>
 
   const router = useRouter();
 
@@ -66,7 +71,7 @@ const SignIn = () => {
   };
 
   const handleGoogle = () => {
-    signInWithGoogle(`/${ACCOUNT}`);
+    startGoogle();
   };
 
   return (

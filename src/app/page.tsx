@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#041C4D]">
       content fix dashboard <br />
       <div className="mt-20 flex gap-10">
         {' '}

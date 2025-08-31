@@ -1,0 +1,6 @@
+/* toast-overrides.css */
+.Toastify__toast {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-family: var(--font-poppins), sans-serif !important;
+}

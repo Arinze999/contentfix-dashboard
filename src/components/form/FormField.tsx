@@ -67,7 +67,7 @@ export const TextInputField: React.FC<BaseFieldProps> = ({
           readOnly={readOnly}
           className={`
             block w-full text-sm md:text-[16px]
-            border-none bg-gray-800/15 ${
+            border-none bg-white/5 ${
               hasError ? 'border-red-500' : 'border-borderGray'
             }
             rounded-md 
@@ -174,7 +174,7 @@ export const PasswordInputField: React.FC<BaseFieldProps> = ({
           type={show ? 'text' : 'password'}
           placeholder={placeholder}
           className={`
-            block w-full bg-gray-800/15 text-sm md:text-[16px]
+            block w-full bg-white/5 text-sm md:text-[16px]
             border ${hasError ? 'border-red-500' : 'border-none'}
             rounded-md 
             py-3

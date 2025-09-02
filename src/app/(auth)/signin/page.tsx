@@ -10,7 +10,7 @@ import ValidatingFormSubmitButton from '@/components/buttons/ValidatingFormSubmi
 import Button from '@/components/buttons/Button';
 import { Google } from '@/components/icons/Google';
 import Link from 'next/link';
-import { ACCOUNT, SIGN_UP } from '@/routes/routes';
+import { DASHBOARD, SIGN_UP } from '@/routes/routes';
 import {
   SigninDataType,
   SigninInitialValues,
@@ -29,7 +29,7 @@ const SignIn = () => {
   const { signIn, serving } = useServerSignIn();
 
   const { startGoogle } = useSignInWithGoogle({
-    next: `/${ACCOUNT}`,
+    next: `${DASHBOARD}`,
   });
   // <button onClick={startGoogle} disabled={serving}>Continue with Google</button>
 

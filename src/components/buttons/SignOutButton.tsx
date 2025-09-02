@@ -8,7 +8,7 @@ export default function SignOutButton() {
     <form action={`/${SIGN_OUT}`} method="post">
       <button
         type="submit"
-        className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+        className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 text-sm md:text-[16px] cursor-pointer"
       >
         Sign out
       </button>

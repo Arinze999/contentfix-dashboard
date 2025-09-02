@@ -155,29 +155,39 @@ body {
   --color-gradientBgBtn: linear-gradient(120deg, #9333ea 0%, #db2777 100%);
   --color-gradientBgBtn2: linear-gradient(120deg, #3b82f6 0%, #06b6d4 100%);
   --color-gradientBgBtn3: linear-gradient(120deg, #f97316 0%, #ef4444 100%);
-  --color-dark: #041C4D;
-  --color-lightBlue: #85D5F6;
+  --color-dark: #041c4d;
+  --color-lightBlue: #85d5f6;
 }
 
 @layer utilities {
   .flex-center {
     @apply flex justify-center items-center;
   }
-  .col-center {
-    @apply flex flex-col justify-center items-center gap-4;
+
+  .flex-between {
+    @apply flex justify-between items-center;
   }
+
+  .col-center {
+    @apply flex flex-col justify-center items-center;
+  }
+
   .col-start {
     @apply flex flex-col gap-4;
   }
+
   .general-title {
     @apply md:text-5xl text-2xl font-bold text-center;
   }
+
   .general-subtitle {
     @apply md:text-lg text-center max-w-[850px];
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   } /* Chrome/Safari */
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -269,7 +279,10 @@ body {
 }
 
 @keyframes shimmer {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(100%); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
-

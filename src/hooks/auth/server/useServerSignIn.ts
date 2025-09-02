@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import type { SigninDataType } from '@/models/auth/SignIn.model';
 import { signInAction } from '@/actions/signInAction';
 import { setUser } from '@/redux/slices/authSlice';
-import { ACCOUNT } from '@/routes/routes';
 import { toast } from 'react-toastify';
 
 type UseServerSignInOptions = {
@@ -41,7 +40,7 @@ export function useServerSignIn(opts: UseServerSignInOptions = {}) {
 
         //navigate
         router.refresh();
-        router.replace(`/${opts.redirectTo ?? ACCOUNT}`);
+        router.replace(`/${opts.redirectTo ?? ''}`);
       } catch (err: any) {
         if (!opts.silent)
           toast.error(err?.message ?? 'Something went wrong', {

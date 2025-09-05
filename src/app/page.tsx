@@ -11,7 +11,7 @@ export default function Dashboard() {
       <div className="default-margin h-full relative col-center">
         <div className="sticky left-0 top-0 py-5 w-full flex-between bg-[#041C4D]">
           <CompanyLogo white />
-          <SignOutButton />
+          <SignOutButton open />
         </div>
 
         <div className="md:mt-20 mt-5">
@@ -19,7 +19,7 @@ export default function Dashboard() {
         </div>
 
         <div className="md:mt-20 mt-5 underline">
-          <Link href={`/${ACCOUNT}`} className='flex-center gap-3'>
+          <Link href={`/${ACCOUNT}`} className="flex-center gap-3">
             Create Posts <ArrowRightSolid />
           </Link>
         </div>

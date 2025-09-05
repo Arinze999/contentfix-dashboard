@@ -3,7 +3,7 @@
 import { useAppSelector } from '@/redux/store';
 import React, { useEffect } from 'react';
 import { useGetUserData } from '@/hooks/user/useGetUserData';
-import SignOutButton from '@/components/buttons/SignOutButton';
+import Banner from '@/components/page/PageBanner';
 
 const AccountPage = () => {
   const auth = useAppSelector((state) => state.auth);
@@ -17,7 +17,11 @@ const AccountPage = () => {
   }, [auth?.id, fetchUserData]);
 
   return (
-    <div className="bg-dark text-white">
+    <div className="default-margin h-[100rem] p-3">
+      <Banner
+        title="Overview"
+        description="Take a look at what you and other users have been up to"
+      />
       AccountPage <div>{}</div>
       <p>
         Hi{' '}
@@ -27,7 +31,6 @@ const AccountPage = () => {
           ? auth.username
           : userData.username}
       </p>
-      <SignOutButton />
     </div>
   );
 };

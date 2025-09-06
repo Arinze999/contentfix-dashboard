@@ -27,7 +27,7 @@ export default function WorkspaceShell({ children }: { children: ReactNode }) {
       <Topbar open={open} onToggleSidebar={() => setOpen(!open)} />
       <div className="flex">
         <Sidebar open={open} />
-        <Mobilebar open={open} />
+        <Mobilebar open={open} onToggleSidebar={() => setOpen(!open)} />
         <main
           className={`flex-1 transition-[margin] duration-200 
             ${open ? 'md:ml-56' : 'md:ml-16'}`}

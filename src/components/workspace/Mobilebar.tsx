@@ -3,7 +3,13 @@ import NavItem from './NavItem';
 import { ACCOUNT } from '@/routes/routes';
 import SignOutButton from '../buttons/SignOutButton';
 
-export default function Mobilebar({ open }: { open: boolean }) {
+export default function Mobilebar({
+  open,
+  onToggleSidebar
+}: {
+  open: boolean;
+  onToggleSidebar: () => void;
+}) {
   return (
     <aside
       className={`md:hidden flex flex-col gap-2 fixed top-14 left-0 w-full 
@@ -18,6 +24,7 @@ export default function Mobilebar({ open }: { open: boolean }) {
             open={open}
             href={item.href}
             matchPrefix={item.href !== `/${ACCOUNT}`}
+            onClick={onToggleSidebar}
           >
             {item.label}
           </NavItem>

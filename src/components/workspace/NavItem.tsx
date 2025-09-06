@@ -17,6 +17,7 @@ type NavItemProps = {
   matchPrefix?: boolean;
   /** Controls label collapse in the sidebar */
   open: boolean;
+  onClick?: () => void;
 };
 
 function isPathActive(pathname: string, href: string, matchPrefix: boolean) {
@@ -34,6 +35,7 @@ export default function NavItem({
   variant = 'default',
   matchPrefix = true,
   open,
+  onClick
 }: NavItemProps) {
   const pathname = usePathname();
   const isActive = isPathActive(pathname, href, matchPrefix);
@@ -48,7 +50,8 @@ export default function NavItem({
     regular: 'text-indigo-400 hover:text-indigo-300',
   };
 
-  const activeClasses = variant === 'default' ? 'md:bg-white/10 text-white' : '';
+  const activeClasses =
+    variant === 'default' ? 'md:bg-white/10 text-white' : '';
 
   return (
     <Link
@@ -62,6 +65,7 @@ export default function NavItem({
         className,
       ].join(' ')}
       title={typeof children === 'string' ? children : undefined}
+      onClick={onClick}
     >
       {icon ? <span className="shrink-0">{icon}</span> : null}
 

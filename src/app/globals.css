@@ -156,7 +156,7 @@ body {
   --color-gradientBgBtn2: linear-gradient(120deg, #3b82f6 0%, #06b6d4 100%);
   --color-gradientBgBtn3: linear-gradient(120deg, #f97316 0%, #ef4444 100%);
   --color-dark: #041c4d;
-  --color-lightBlue: #85d5f6;
+  --color-lightBlue: #bae8fa;
 }
 
 @layer utilities {
@@ -172,8 +172,12 @@ body {
     @apply flex flex-col justify-center items-center;
   }
 
+  .col-between {
+    @apply flex flex-col justify-between;
+  }
+
   .col-start {
-    @apply flex flex-col gap-4;
+    @apply flex flex-col;
   }
 
   .general-title {

@@ -70,7 +70,7 @@ export default function SocialUsageChart() {
   }, [timeframe]);
 
   return (
-    <div className="w-full max-w-[45rem] rounded-xl border border-white/10 bg-card/20 p-4 md:p-6">
+    <div className="w-full rounded-xl border border-white/10 bg-card/20 p-4 md:p-6">
       <div className="mb-4 flex items-center gap-3">
         <h3 className="text-sm">Platform usage%</h3>
         <div className="ml-auto inline-flex rounded-lg border border-white/10 p-1">

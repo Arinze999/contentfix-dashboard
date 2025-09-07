@@ -5,10 +5,10 @@ type Color = 'blue' | 'red' | 'green' | 'purple';
 
 export default function StatsCard({ color }: { color: Color }) {
   const colorMap: Record<Color, string> = {
-    blue: 'bg-blue-900/10 border-blue-300/50',
-    red: 'bg-red-400/10 border-red-300/50',
-    green: 'bg-green-400/10 border-green-300/50',
-    purple: 'bg-purple-400/10 border-purple-300/50',
+    blue: 'bg-blue-900/10 border-blue-300/50 text-blue-300',
+    red: 'bg-red-400/10 border-red-300/50 text-red-300',
+    green: 'bg-green-400/10 border-green-300/50 text-green-300',
+    purple: 'bg-purple-400/10 border-purple-300/50 text-purple-300',
   };
 
   return (

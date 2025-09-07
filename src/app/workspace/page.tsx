@@ -25,7 +25,7 @@ const WorkspacePage = () => {
       />
       <div className="flex flex-col min-[1200px]:flex-row gap-6">
         <Stats />
-        <Info color="purple" />
+        <Info color="green" />
       </div>
       <SocialUsageChart />
     </div>

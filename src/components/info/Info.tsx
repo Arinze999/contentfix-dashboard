@@ -5,10 +5,10 @@ type Color = 'blue' | 'red' | 'green' | 'purple';
 
 const Info = ({ color }: { color: Color }) => {
   const colorMap: Record<Color, string> = {
-    blue: 'bg-blue-200/50 text-blue-900',
-    red: 'bg-red-200/50 text-red-900',
-    green: 'bg-green-200/50 text-green-900',
-    purple: 'bg-purple-200/50 text-purple-900',
+    blue: 'bg-blue-200/90 text-blue-900',
+    red: 'bg-red-200/90 text-red-900',
+    green: 'bg-green-200/90 text-green-900',
+    purple: 'bg-purple-200/90 text-purple-900',
   };
 
   return (

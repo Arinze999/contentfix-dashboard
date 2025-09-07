@@ -7,7 +7,7 @@ interface IBanner {
 
 const Banner: React.FC<IBanner> = ({ title, description }) => {
   return (
-    <section className="w-full border-2 p-3 rounded-xl bg-white/5 border-lightBlue/10 py-3 mt-10">
+    <section className="w-full border-2 p-3 rounded-xl bg-[#011129] border-lightBlue/10 py-3 mt-10 sticky top-20 md:top-30 z-2">
       <h2 className="text-[18px] md:text-[24px] font-semibold text-gray-300">
         {title}
       </h2>

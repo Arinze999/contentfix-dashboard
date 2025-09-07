@@ -7,9 +7,9 @@ import Link from 'next/link';
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-[#041C4D] text-white">
+    <div className="min-h-screen bg-dark text-white">
       <div className="default-margin h-full relative col-center">
-        <div className="sticky left-0 top-0 py-5 w-full flex-between bg-[#041C4D]">
+        <div className="sticky left-0 top-0 py-5 w-full flex-between bg-dark">
           <CompanyLogo white />
           <SignOutButton open />
         </div>

@@ -36,7 +36,7 @@ const ValidatingFormSubmitButton: React.FC<IValidatingFormSubmitButton> = ({
   `;
 
   const enabledStyles = `
-    bg-blue-500 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    bg-purple-500 hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
   `;
 
   const disabledStyles = `

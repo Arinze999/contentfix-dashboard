@@ -15,7 +15,7 @@ export default function Mobilebar({
       className={`md:hidden flex flex-col gap-2 fixed top-14 left-0 w-full z-10
         bg-background py-4 shadow-lg bg-dark
         transition-transform duration-300 
-        ${open ? 'translate-y-0' : '-translate-y-full'}`}
+        ${open ? 'translate-y-0' : '-translate-y-[200%]'}`}
     >
       <nav className="flex gap-2 flex-col">
         {navConfig.map((item) => (

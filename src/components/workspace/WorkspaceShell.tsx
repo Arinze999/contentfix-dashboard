@@ -23,7 +23,7 @@ export default function WorkspaceShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="min-h-dvh bg-dark text-white">
+    <div className="min-h-dvh bg-dark text-white h-fit">
       <Topbar open={open} onToggleSidebar={() => setOpen(!open)} />
       <div className="flex">
         <Sidebar open={open} />

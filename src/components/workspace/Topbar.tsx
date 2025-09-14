@@ -9,7 +9,7 @@ type Props = {
 
 export default function Topbar({ open, onToggleSidebar }: Props) {
   return (
-    <header className="sticky top-0 z-40 flex md:flex-row flex-row-reverse md:justify-start justify-between w-full h-14 md:h-20 items-center border-b border-lightBlue/10 bg-dark backdrop-blur">
+    <header className="fixed md:sticky top-0 z-40 flex md:flex-row flex-row-reverse md:justify-start justify-between w-full h-14 md:h-20 items-center border-b border-lightBlue/10 bg-dark backdrop-blur">
       <button
         onClick={onToggleSidebar}
         className="px-4 py-2 text-sm hover:opacity-80"

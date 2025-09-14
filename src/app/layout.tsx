@@ -77,7 +77,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${inter.variable} antialiased`}>
+      <body className={`${poppins.variable} ${inter.variable} antialiased bg-dark`}>
         <ReduxProvider>
           <HydrateAuth user={safeUser} /> {children}
           <Toaster />

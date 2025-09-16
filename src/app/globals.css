@@ -290,3 +290,20 @@ body {
     transform: translateX(100%);
   }
 }
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  height: 10px;
+  width: 80%;
+  border-radius: 10px;
+  max-width: 700px;
+  --c:no-repeat linear-gradient(#ffffff 0 0);
+  background: var(--c),var(--c),#2105c225;
+  background-size: 60% 100%;
+  animation: l16 6s infinite;
+}
+@keyframes l16 {
+  0%   {background-position:-150% 0,-150% 0}
+  66%  {background-position: 250% 0,-150% 0}
+  100% {background-position: 250% 0, 250% 0}
+}

@@ -1,4 +1,6 @@
-// ── Submodels ────────────────────────────────────────────────────────────────
+import { PostItem } from "@/types/social";
+
+// ── Submodels, this is not used ────────────────────────────────────────────────────────────────
 export type UserPosts = {
   threads: string[];
   twitter: string[];
@@ -38,7 +40,7 @@ export type UserData = {
   avatar_url: string | null;
   updated_at: string | null;            
   credits: string | null;               
-  posts: UserPosts;
+  posts: PostItem[] | null;
   posts_updated_at: string | null;      
   rating: UserRating;
   rating_updated_at: string | null;     
@@ -52,7 +54,7 @@ export const initialUserData: UserData = {
   avatar_url: null,
   updated_at: null,
   credits: null,
-  posts: initialUserPosts,
+  posts: null,
   posts_updated_at: null,
   rating: initialUserRating,
   rating_updated_at: null,

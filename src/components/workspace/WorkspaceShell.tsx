@@ -1,4 +1,3 @@
-// components/workspace/WorkspaceShell.tsx
 'use client';
 
 import { useState, type ReactNode } from 'react';
@@ -6,9 +5,13 @@ import { useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import Mobilebar from './Mobilebar';
+import LoadingScreen from '../LoadingScreen';
+import { useWorkspaceLoading } from '@/hooks/useWorkspaceLoading';
 
 export default function WorkspaceShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(true);
+
+  const { loading } = useWorkspaceLoading();
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,7 +35,7 @@ export default function WorkspaceShell({ children }: { children: ReactNode }) {
           className={`flex-1 transition-[margin] duration-200 
             ${open ? 'md:ml-56' : 'md:ml-16'}`}
         >
-          {children}
+          {loading ? <LoadingScreen /> : children}
         </main>
       </div>
     </div>

@@ -8,16 +8,44 @@ import ResultSkeleton from '../loaders/ResultSkeleton';
 import { gsap } from '@/lib/gsapClient';
 import { CopyOutline } from '../icons/CopyOutline';
 import { Save } from '../icons/Save';
+import { useSavePost } from '@/hooks/prompt/save/useSavePost';
+import { Saved } from '../icons/Saved';
+
+// cheap, stable hash for strings
+const hashString = (s: string) => {
+  let h = 2166136261 >>> 0; // FNV-1a
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(36);
+};
 
 const ResultScreen: React.FC = () => {
   const { loading, result, failed } = useSendPromptContext();
 
+  const { savePost, loading: savingPost } = useSavePost();
+
   // container for markdown content that gets animated
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // copy-to-clipboard UI state (kept OUTSIDE the animated subtree)
   const [copied, setCopied] = useState(false);
   const copyTimerRef = useRef<number | null>(null);
+
+  const savedKeysRef = useRef<Set<string>>(new Set());
+  const [saved, setSaved] = useState(false);
+
+  // a stable key for the current result
+  const contentKey = useMemo(() => {
+    const raw = result?.content || '';
+    // prefer id if you trust it to be stable; fall back to content hash
+    return result?.id ? `id:${result.id}` : `h:${hashString(raw)}`;
+  }, [result?.id, result?.content]);
+
+  // whenever content changes, reflect whether we already saved it
+  useEffect(() => {
+    setSaved(savedKeysRef.current.has(contentKey));
+  }, [contentKey]);
 
   // track if initial typing animation has completed
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -82,7 +110,17 @@ const ResultScreen: React.FC = () => {
     }
   };
 
-  // clear copy timer on unmount
+  const handleSave = async () => {
+    if (!result?.content) return;
+    if (saved) return; // already saved this exact content
+
+    const savedPost = await savePost(result.content);
+    if (savedPost) {
+      savedKeysRef.current.add(contentKey);
+      setSaved(true); // stays true until contentKey changes
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
@@ -154,7 +192,7 @@ const ResultScreen: React.FC = () => {
             type="button"
             onClick={handleCopy}
             disabled={!result?.content}
-            className="rounded-md border border-white/20 px-3 hover:text-white py-1 text-xs md:text-sm shadow-sm hover:bg-white/10 bg-blue-700/50 disabled:opacity-50 flex-center gap-3"
+            className="rounded-md border border-white/20 px-3 hover:text-white py-1 text-xs md:text-sm shadow-sm hover:bg-white/10 disabled:opacity-50 flex-center gap-3"
             title="Copy content"
           >
             <CopyOutline /> {copied ? 'Copied!' : 'Copy'}
@@ -167,12 +205,13 @@ const ResultScreen: React.FC = () => {
         <div className="sticky top-20 right-5 md:right-30 z-10 mt-2 mb-2 flex justify-end">
           <button
             type="button"
-            onClick={handleCopy}
-            disabled={!result?.content}
-            className="rounded-md border border-white/20 px-3 hover:text-white py-1 text-xs md:text-sm shadow-sm hover:bg-white/10 bg-purple-500/50 disabled:opacity-50 flex-center gap-3"
-            title="Copy content"
+            onClick={handleSave}
+            disabled={!result?.content || savingPost || saved}
+            className="rounded-md border disabled:cursor-not-allowed border-white px-3 hover:text-white py-1 text-xs md:text-sm shadow-sm hover:bg-white/10 bg-purple-500 disabled:opacity-50 flex-center gap-3"
+            title="Save content"
+            aria-busy={savingPost}
           >
-            <Save /> {copied ? 'Saved!' : 'Save'}
+            {saved ? <Saved /> : <Save />} {savingPost ? 'Saving…' : saved ? 'Saved!' : 'Save'}
           </button>
         </div>
       )}

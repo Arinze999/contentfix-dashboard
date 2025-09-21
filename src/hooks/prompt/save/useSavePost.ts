@@ -1,21 +1,26 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-toastify';
 import { parseAiSocial } from '@/utils/parseAiSocial';
 import type { PostItem } from '@/types/social';
 import { useAppSelector } from '@/redux/store';
 
+// optional: keep Redux in sync
+import { addPost } from '@/redux/slices/postsSlice';
+import { setPostsUpdatedAt } from '@/redux/slices/userDataSlice';
+
 export function useSavePost() {
   const auth = useAppSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
 
   const savePost = useCallback(
     async (input: string | PostItem) => {
-      // 1) Require a signed-in user
       if (!auth?.id) {
         setFailed(true);
         toast.error('You must be signed in.', { autoClose: 4000 });
@@ -25,48 +30,39 @@ export function useSavePost() {
       setLoading(true);
       setFailed(false);
       try {
-        // 2) Build the post (markdown or object)
+        // Build the post (markdown or object)
         const post: PostItem =
           typeof input === 'string' ? parseAiSocial(input) : { ...input };
 
-        // Ensure there's something to save (at least one social)
         if (!(post.linkedin || post.twitter || post.threads || post.official)) {
           throw new Error('Nothing to save: no social section found.');
         }
 
-        // Optional client id for immediate routing/edit UX
-        if (
-          !post.id &&
-          typeof crypto !== 'undefined' &&
-          'randomUUID' in crypto
-        ) {
-          post.id = crypto.randomUUID();
-        }
-
         const supabase = createClient();
 
-        // Pull current posts
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('posts')
-          .eq('id', auth.id) // safe after guard
-          .single();
+        // Atomic append via RPC; RLS applies; trigger injects server id
+        const { data, error } = await supabase.rpc('append_profile_post', {
+          uid: auth.id,
+          new_post: post,
+        });
         if (error) throw error;
 
-        const current = Array.isArray(data?.posts)
-          ? (data.posts as PostItem[])
-          : [];
-        const next = [...current, post];
+        // `returns table` comes back as an array with one row
+        const row = Array.isArray(data) ? data[0] : data;
+        const savedPost = (row?.post ?? null) as PostItem | null;
+        const ts = (row?.posts_updated_at ?? null) as string | null;
 
-        // Save back
-        const { error: upErr } = await supabase
-          .from('profiles')
-          .update({ posts: next })
-          .eq('id', auth.id);
-        if (upErr) throw upErr;
+        if (!savedPost) {
+          // Fallback — should not happen if RPC is as defined
+          toast.warn('Saved, but could not read back the new post.', { autoClose: 4000 });
+          return null;
+        }
+
+        dispatch(addPost(savedPost));
+        if (ts) dispatch(setPostsUpdatedAt(ts));
 
         toast.success('Post saved ✅', { autoClose: 3000 });
-        return post;
+        return savedPost;
       } catch (err: any) {
         setFailed(true);
         toast.error(err?.message || 'Failed to save post', { autoClose: 5000 });
@@ -75,7 +71,7 @@ export function useSavePost() {
         setLoading(false);
       }
     },
-    [auth?.id]
+    [auth?.id, dispatch]
   );
 
   return { savePost, loading, failed };

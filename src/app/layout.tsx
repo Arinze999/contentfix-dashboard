@@ -77,7 +77,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${inter.variable} antialiased bg-dark`}>
+      <body
+        className={`${poppins.variable} ${inter.variable} antialiased bg-dark`}
+      >
+        <div id="modal-root"></div>
         <ReduxProvider>
           <HydrateAuth user={safeUser} /> {children}
           <Toaster />

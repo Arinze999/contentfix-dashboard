@@ -25,6 +25,8 @@ export default function WorkspaceShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  if (loading) return <LoadingScreen />;
+
   return (
     <div className="min-h-dvh bg-dark text-white h-fit">
       <Topbar open={open} onToggleSidebar={() => setOpen(!open)} />
@@ -35,7 +37,7 @@ export default function WorkspaceShell({ children }: { children: ReactNode }) {
           className={`flex-1 transition-[margin] duration-200 
             ${open ? 'md:ml-56' : 'md:ml-16'}`}
         >
-          {loading ? <LoadingScreen /> : children}
+          {children}
         </main>
       </div>
     </div>

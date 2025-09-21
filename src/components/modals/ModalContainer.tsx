@@ -31,7 +31,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
   onConfirmClose,
   maxwidth,
 }) => {
-  const { displayModal, showModal } = useContext(ModalContext)!;
+  const { displayModal } = useContext(ModalContext)!;
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handlePrimaryClose = () => {
@@ -39,12 +39,8 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 
     if (confirm && !showConfirm) {
       setShowConfirm(true);
-
-      console.log('clicked 11');
     } else {
       displayModal(false);
-      console.log(showModal);
-      console.log('clicked 22');
     }
   };
 
@@ -65,13 +61,13 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
       {/* Base modal card */}
       <div
         className={`
-          bg-purple-950 text-white rounded-lg
+          bg-lightBlue text-dark rounded-lg
           mt-16 mb-16
-          w-auto max-w-[90vw]
+          w-[95%] max-w-[90vw]
           flex flex-col gap-9
           px-20 pt-8 pb-16
           md:w-[90vw] md:p-10
-          sm:w-[94vw] sm:p-2
+          p-2
           shadow-xl
         `}
         style={baseStyle}

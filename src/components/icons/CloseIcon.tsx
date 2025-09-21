@@ -9,7 +9,7 @@ interface CloseIconProps {
 const CloseIcon: React.FC<CloseIconProps> = ({
   onClick,
   fillColor = 'black',
-  strokeColor = 'white',
+  strokeColor = '#bae8fa',
 }) => {
   return (
     <svg

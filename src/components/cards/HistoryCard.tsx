@@ -5,7 +5,12 @@ import { PostItem } from '@/types/social';
 import { ModalProvider } from '@/context/ModalContext';
 import ModalTriggerContainer from '../modals/ModalTriggerContainer';
 import { Modal } from '../modals/Modal';
-import ModalContainer from '../modals/ModalContainer';
+import { compact } from '@/utils/utils';
+import HistoryModal from '../modals/modalcontents/HistoryModal';
+
+interface More {
+  id: string;
+}
 
 interface HistoryCardProps extends PostItem {
   isMobile: boolean;
@@ -14,16 +19,14 @@ interface HistoryCardProps extends PostItem {
 }
 
 /* eslint-disable react/display-name */
-const ShowModal = React.forwardRef<HTMLDivElement>(({}, ref) => {
+const ShowModal = React.forwardRef<HTMLDivElement, More>(({ id }, ref) => {
   return (
     <ModalProvider>
       <ModalTriggerContainer ref={ref} display="none">
         <></>
       </ModalTriggerContainer>
       <Modal>
-        <ModalContainer maxwidth="63rem" padding="2rem">
-          <p>herererer</p>
-        </ModalContainer>
+        <HistoryModal id={id} />
       </Modal>
     </ModalProvider>
   );
@@ -33,6 +36,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
   isMobile,
   className,
   clickedIdAction,
+  id,
 }) => {
   const triggerRef = useRef<HTMLDivElement>(null);
 
@@ -44,14 +48,29 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
     clickedIdAction?.();
   };
 
+  console.log(id);
+
   if (isMobile)
     return (
-      <div onClick={handleMobile} className={className}>
-        mobile <ShowModal ref={triggerRef} />
+      <div
+        onClick={handleMobile}
+        className={`${className} border p-3 rounded-xl bg-[#0111297a] border-lightBlue/5 max-w-[600px] cursor-pointer`}
+      >
+        <p className="font-bold text-gray-500">
+          Post <span className="text-sm font-thin">{compact(id)}</span>
+        </p>
+        <ShowModal ref={triggerRef} id={id ?? ''} />
       </div>
     );
 
-  return <div onClick={handlePC}>HistoryCard</div>;
+  return (
+    <div
+      onClick={handlePC}
+      className={`${className} border p-3 rounded-xl bg-[#0111297a] border-lightBlue/5 max-w-[400px]`}
+    >
+      HistoryCard
+    </div>
+  );
 };
 
 export default HistoryCard;

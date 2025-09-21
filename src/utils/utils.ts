@@ -21,3 +21,25 @@ export const calculateTimeAgo = (dateString: string | Date) => {
     return `${years} year${years !== 1 ? 's' : ''}`;
   }
 };
+
+// utils/compactId.ts
+export function compact(
+  value: string | number | null | undefined,
+  opts?: {
+    start?: number;   // how many chars to keep from the start
+    end?: number;     // how many chars to keep from the end
+    ellipsis?: string; // replacement in the middle
+  }
+): string {
+  const str = String(value ?? '');
+  if (!str) return '';
+
+  const start = Math.max(1, opts?.start ?? 6);
+  const end = Math.max(1, opts?.end ?? 4);
+  const ellipsis = opts?.ellipsis ?? '....';
+
+  // If it's already short, don't expand it by adding ellipsis
+  if (str.length <= start + end + ellipsis.length) return str;
+
+  return `${str.slice(0, start)}${ellipsis}${str.slice(-end)}`;
+}

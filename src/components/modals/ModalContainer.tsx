@@ -61,7 +61,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
       {/* Base modal card */}
       <div
         className={`
-          bg-lightBlue text-dark rounded-lg
+          bg-purple-300 text-dark rounded-lg
           mt-16 mb-16
           w-[95%] max-w-[90vw]
           flex flex-col gap-9

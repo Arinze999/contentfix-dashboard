@@ -16,6 +16,7 @@ interface HistoryCardProps extends PostItem {
   isMobile: boolean;
   clickedIdAction?: () => void;
   className?: string;
+  isActive: boolean;
 }
 
 /* eslint-disable react/display-name */
@@ -37,6 +38,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
   className,
   clickedIdAction,
   id,
+  isActive,
 }) => {
   const triggerRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +56,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
     return (
       <div
         onClick={handleMobile}
-        className={`${className} border p-3 rounded-xl bg-[#0111297a] border-lightBlue/5 max-w-[600px] cursor-pointer`}
+        className={`${className} border p-3 rounded-xl bg-[#0111297a] border-lightBlue/5 w-full cursor-pointer`}
       >
         <p className="font-bold text-gray-500">
           Post <span className="text-sm font-thin">{compact(id)}</span>
@@ -66,9 +68,15 @@ const HistoryCard: React.FC<HistoryCardProps> = ({
   return (
     <div
       onClick={handlePC}
-      className={`${className} border p-3 rounded-xl bg-[#0111297a] border-lightBlue/5 max-w-[400px]`}
+      className={`${className} p-3 rounded-xl min-w-[300px] cursor-pointer ${
+        isActive
+          ? 'bg-purple-400/10 border-purple-300/50 text-purple-300 border-2'
+          : 'bg-[#0111297a] border-lightBlue/5 border'
+      }`}
     >
-      HistoryCard
+      <p className="font-bold text-gray-500">
+        Post <span className="text-sm font-thin">{compact(id)}</span>
+      </p>
     </div>
   );
 };

@@ -28,7 +28,7 @@ const SignIn = () => {
 
   const { signIn, serving } = useServerSignIn();
 
-  const { startGoogle } = useSignInWithGoogle({
+  const { startGoogle, serving: googling } = useSignInWithGoogle({
     next: `${DASHBOARD}`,
   });
   // <button onClick={startGoogle} disabled={serving}>Continue with Google</button>
@@ -97,6 +97,7 @@ const SignIn = () => {
         className="bg-white text-black w-full py-2 rounded-md"
         icon={<Google />}
         onClick={handleGoogle}
+        disabled={googling}
       />
       <hr className="border-white/30 border-1 w-full my-3" />
       <div className="text-sm">

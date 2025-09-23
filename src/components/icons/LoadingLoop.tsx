@@ -5,8 +5,8 @@ export function LoadingTwotoneLoop(props: SVGProps<SVGSVGElement>) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
+      width="20"
+      height="20"
       {...props}
     >
       <g

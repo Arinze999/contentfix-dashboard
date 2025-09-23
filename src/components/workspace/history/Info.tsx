@@ -1,56 +1,21 @@
-'use client';
+'use client'
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import ModalContainer from '../ModalContainer';
-import type { PostItem } from '@/types/social';
+import { buildMarkdownFromPost } from '@/components/modals/modalcontents/HistoryModal';
 import { useAppSelector } from '@/redux/store';
+import { PostItem } from '@/types/social';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CopyOutline } from '@/components/icons/CopyOutline';
+import { useDeletePost } from '@/hooks/user/posts/useDeletePost';
+import { LoadingTwotoneLoop } from '@/components/icons/LoadingLoop';
+import { Delete12Filled } from '@/components/icons/DeleteIcon';
 
-// helper to rebuild a single markdown payload from a PostItem
-export const buildMarkdownFromPost = (p: PostItem | null): string => {
-  if (!p) return '';
-
-  const sections: string[] = [];
-
-  if (p.linkedin) {
-    const header = p.linkedin.header ? `**Header:** ${p.linkedin.header}\n\n` : '';
-    const body =
-      p.linkedin.body?.markdown ??
-      p.linkedin.body?.plain ??
-      '';
-    const tags = p.linkedin.hashtags?.length
-      ? `\n\n#Hashtags: ${p.linkedin.hashtags.map(t => `#${t}`).join(' ')}`
-      : '';
-    sections.push(`# LinkedIn\n${header}${body}${tags}`);
-  }
-
-  if (p.twitter) {
-    const text = p.twitter.text?.markdown ?? p.twitter.text?.plain ?? '';
-    sections.push(`# Twitter/X\n${text}`);
-  }
-
-  if (p.threads) {
-    const text = p.threads.text?.markdown ?? p.threads.text?.plain ?? '';
-    sections.push(`# Threads\n${text}`);
-  }
-
-  if (p.official) {
-    const subject = p.official.subject ? `Subject: ${p.official.subject}\n\n` : '';
-    const body =
-      p.official.body?.markdown ??
-      p.official.body?.plain ??
-      '';
-    sections.push(`# Official\n${subject}${body}`);
-  }
-
-  return sections.filter(Boolean).join(`\n\n---\n\n`);
-};
-
-const HistoryModal = ({ id }: { id: string }) => {
+const Info = ({ id, isMobile }: { id: string; isMobile: boolean }) => {
   const posts = useAppSelector((state) => state.posts);
   const [post, setPost] = useState<PostItem | null>(null);
+
+  const { deletePost, loading } = useDeletePost();
 
   // locate the post by id whenever posts or id change
   useEffect(() => {
@@ -88,12 +53,14 @@ const HistoryModal = ({ id }: { id: string }) => {
     };
   }, []);
 
+  if (isMobile) return;
+
   return (
-    <ModalContainer padding="1rem" maxwidth="700px">
+    <div className="border-2 p-3 rounded-xl bg-purple-400/10 border-purple-300/50 text-purple-100 flex-1 h-fit sticky top-25">
       {!post ? (
         <div className="text-sm text-white/70">Post not found.</div>
       ) : (
-        <div className="text-sm rounded-lg flow-root relative">
+        <div className="text-sm rounded-lg flow-root">
           {/* Copy button */}
           <div className="sticky top-0 right-5 md:right-30 z-10 mt-2 mb-2 flex justify-end">
             <button
@@ -107,6 +74,19 @@ const HistoryModal = ({ id }: { id: string }) => {
             </button>
           </div>
 
+          {/* Delete button */}
+          <div className="sticky top-0 right-5 md:right-30 z-10 mt-2 mb-2 flex justify-end">
+            <button
+              type="button"
+              onClick={() => deletePost(post.id!)}
+              disabled={!content || loading}
+              className="rounded-md border-2 border-red-600 px-3 py-1 text-xs md:text-sm shadow-sm text-red-600 hover:bg-red-600 hover:text-white disabled:opacity-50 flex-center gap-3"
+              title="Delete Post"
+            >
+              {loading ? <LoadingTwotoneLoop /> : <Delete12Filled />}
+            </button>
+          </div>
+
           {/* Markdown */}
           <div className="block w-full break-words whitespace-pre-wrap leading-relaxed">
             <ReactMarkdown
@@ -115,26 +95,29 @@ const HistoryModal = ({ id }: { id: string }) => {
                 p: (props) => <p className="m-0" {...props} />,
                 h1: (props) => (
                   <h1
-                    className="text-xl md:text-3xl font-extrabold leading-tight mt-2 mb-2"
+                    className="text-3xl font-extrabold leading-tight mt-2 mb-2"
                     {...props}
                   />
                 ),
                 h2: (props) => (
                   <h2
-                    className="text-xl md:text-3xl font-extrabold leading-tight mt-2 mb-2"
+                    className="text-3xl font-extrabold leading-tight mt-2 mb-2"
                     {...props}
                   />
                 ),
                 h3: (props) => (
                   <h3
-                    className="text-xl md:text-3xl font-extrabold leading-tight mt-2 mb-2"
+                    className="text-3xl font-extrabold leading-tight mt-2 mb-2"
                     {...props}
                   />
                 ),
                 li: (props) => <li className="" {...props} />,
                 code: ({ inlist, className, children, ...props }) =>
                   inlist ? (
-                    <code className="px-1 py-0.5 rounded bg-white/10" {...props}>
+                    <code
+                      className="px-1 py-0.5 rounded bg-white/10"
+                      {...props}
+                    >
                       {children}
                     </code>
                   ) : (
@@ -151,8 +134,8 @@ const HistoryModal = ({ id }: { id: string }) => {
           </div>
         </div>
       )}
-    </ModalContainer>
+    </div>
   );
 };
 
-export default HistoryModal;
+export default Info;

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAppSelector } from '@/redux/store';
 import { useGetUserData } from './user/useGetUserData';
-import { useGetPosts } from './user/useGetPosts';
+import { useGetPosts } from './user/posts/useGetPosts';
 
 export function useWorkspaceLoading() {
   const auth = useAppSelector((s) => s.auth);

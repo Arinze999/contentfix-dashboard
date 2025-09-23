@@ -15,15 +15,20 @@ import ValidatingFormSubmitButton from '@/components/buttons/ValidatingFormSubmi
 import Button from '@/components/buttons/Button';
 import { Google } from '@/components/icons/Google';
 import Link from 'next/link';
-import { SIGN_IN } from '@/routes/routes';
+import { DASHBOARD, SIGN_IN } from '@/routes/routes';
 import { FormikHelpers } from 'formik';
 import { useSignup } from '@/hooks/auth/useSignUp';
 import { useServerSignUp } from '@/hooks/auth/server/useServerSignUp';
+import { useSignInWithGoogle } from '@/hooks/auth/useSignInWithGoogle';
 
 const SignUp = () => {
   const { loading } = useSignup();
 
   const { signUp, serving } = useServerSignUp();
+
+  const { startGoogle, serving: googling } = useSignInWithGoogle({
+    next: `${DASHBOARD}`,
+  });
 
   // const handleSubmit = (
   //   values: SignupDataType,
@@ -41,6 +46,10 @@ const SignUp = () => {
   ) => {
     await signUp(values);
     actions.resetForm({ values: SignupInitialValues });
+  };
+
+  const handleGoogle = () => {
+    startGoogle();
   };
 
   return (
@@ -67,9 +76,11 @@ const SignUp = () => {
       </FormComponent>
       or
       <Button
-        text="Sign up with Google"
+        text="Get started with Google (Quick)"
         className="bg-white text-black w-full py-2 rounded-md"
         icon={<Google />}
+        onClick={handleGoogle}
+        disabled={googling}
       />
       <hr className="border-white/30 border-1 w-full my-3" />
       <div className="text-sm">

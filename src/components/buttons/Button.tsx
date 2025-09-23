@@ -13,11 +13,11 @@ const Button = ({
   icon?: React.ReactNode;
   left?: boolean;
   disabled?: boolean;
-  onClick?: ()=> void;
+  onClick?: () => void;
 }) => {
   return (
     <button
-      className={`${className} cursor-pointer flex gap-3 justify-center items-center text-sm md:text-md text-nowrap disabled:cursor-help`}
+      className={`${className} cursor-pointer flex gap-3 justify-center items-center text-sm md:text-md text-nowrap disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-75`}
       disabled={disabled}
       onClick={onClick}
     >

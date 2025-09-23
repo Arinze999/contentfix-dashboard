@@ -19,10 +19,9 @@ const Info = ({ color }: { color: Color }) => {
         <InfoIcon />
       </h3>
       <p className="text-sm">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora fugiat
-        cum error minus ipsa ullam expedita repellendus, nisi adipisci ipsam
-        harum deleniti nulla natus similique asperiores consequatur quis
-        voluptas dolore.
+        Contentfix is powered by Deepseeks R1 0538 free AI API, so there might
+        be a few down times. Please come back later and try again if that
+        happens. Thank you for trying out CONTENTFIX!
       </p>
     </div>
   );

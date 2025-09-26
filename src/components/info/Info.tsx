@@ -3,7 +3,7 @@ import { InfoIcon } from '../icons/Info';
 
 type Color = 'blue' | 'red' | 'green' | 'purple';
 
-const Info = ({ color }: { color: Color }) => {
+const Info = ({ color, text }: { color: Color; text: string }) => {
   const colorMap: Record<Color, string> = {
     blue: 'bg-blue-200/90 text-blue-900',
     red: 'bg-red-200/90 text-red-900',
@@ -18,11 +18,7 @@ const Info = ({ color }: { color: Color }) => {
       <h3 className="font-bold flex gap-1">
         <InfoIcon />
       </h3>
-      <p className="text-sm">
-        Contentfix is powered by Deepseeks R1 0538 free AI API, so there might
-        be a few down times. Please come back later and try again if that
-        happens. Thank you for trying out CONTENTFIX!
-      </p>
+      <p className="text-sm">{text}</p>
     </div>
   );
 };

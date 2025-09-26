@@ -25,7 +25,12 @@ const WorkspacePage = () => {
       />
       <div className="flex flex-col min-[1200px]:flex-row gap-6">
         <Stats />
-        <Info color="green" />
+        <Info
+          color="green"
+          text=" Contentfix is powered by Deepseeks R1 0538 free AI API, so there might
+        be a few down times. Please come back later and try again if that
+        happens. Thank you for trying out CONTENTFIX!"
+        />
       </div>
       <SocialUsageChart />
     </div>

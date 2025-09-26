@@ -56,7 +56,7 @@ const Info = ({ id, isMobile }: { id: string; isMobile: boolean }) => {
   if (isMobile) return;
 
   return (
-    <div className="border-2 p-3 rounded-xl bg-purple-400/10 border-purple-300/50 text-purple-100 flex-1 h-fit sticky top-25">
+    <div className="p-3 md:p-4 rounded-xl bg-blue-400/10 text-purple-100 flex-1 h-fit sticky top-25">
       {!post ? (
         <div className="text-sm text-white/70">Post not found.</div>
       ) : (

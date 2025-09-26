@@ -78,7 +78,9 @@ export const TextInputField: React.FC<BaseFieldProps> = ({
         />
       </div>
 
-      {hasError && <p className="mt-1 text-xs md:text-sm text-red-600">{meta.error}</p>}
+      {hasError && (
+        <p className="mt-1 text-xs md:text-sm text-red-600">{meta.error}</p>
+      )}
     </div>
   );
 };
@@ -98,11 +100,8 @@ export const TextInputField2: React.FC<BaseFieldProps> = ({
   const hasError = Boolean(meta.touched && meta.error);
 
   return (
-    <div className={`mb-6 w-full ${className}`}>
-      <label
-        htmlFor={name}
-        className="block text-sm text-primaryText mb-2 font-[700] font-inter"
-      >
+    <div className={`md:mb-6 w-full ${className}`}>
+      <label htmlFor={name} className="block text-sm mb-2">
         {label}
       </label>
 
@@ -122,11 +121,11 @@ export const TextInputField2: React.FC<BaseFieldProps> = ({
           readOnly={readOnly}
           className={`
             block w-full
-            border ${hasError ? 'border-red-500' : 'border-borderGray'}
+            border-2 ${hasError ? 'border-red-500' : 'border-white/10'}
             rounded-md 
-            py-3
+            py-2 md:py-3
             ${lpiSrc ? 'pl-10' : 'pl-3'} pr-3
-            focus:outline-none focus:ring-2 focus:ring-mainBlue
+            focus:outline-none focus:ring-2 focus:ring-mainBlue read-only:text-gray-200/20 read-only:cursor-not-allowed
           `}
         />
       </div>
@@ -192,7 +191,9 @@ export const PasswordInputField: React.FC<BaseFieldProps> = ({
         </button>
       </div>
 
-      {hasError && <p className="mt-1 text-xs md:text-sm text-red-600">{meta.error}</p>}
+      {hasError && (
+        <p className="mt-1 text-xs md:text-sm text-red-600">{meta.error}</p>
+      )}
     </div>
   );
 };

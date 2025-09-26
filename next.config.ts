@@ -4,14 +4,26 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_HOST = SUPABASE_URL ? new URL(SUPABASE_URL).hostname : '';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
+      // Supabase Storage
+      ...(SUPABASE_HOST
+        ? [
+            {
+              protocol: 'https',
+              hostname: SUPABASE_HOST, 
+              port: '',
+              pathname: '/storage/v1/object/public/**',
+            } as const,
+          ]
+        : []),
+
+      // Google profile photos
       {
         protocol: 'https',
-        hostname: SUPABASE_HOST, // e.g. bdxoybafmbipkcuvfelw.supabase.co
+        hostname: 'lh3.googleusercontent.com',
         port: '',
-        pathname: '/storage/v1/object/public/**',
+        pathname: '/**',
       },
     ],
   },

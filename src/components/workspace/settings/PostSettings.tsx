@@ -2,26 +2,36 @@
 
 import ValidatingFormSubmitButton from '@/components/buttons/ValidatingFormSubmitButton';
 import { FormComponent } from '@/components/form/FormComponent';
-import { TextInputField } from '@/components/form/FormField';
+import { TextAreaInputField } from '@/components/form/FormField';
 import Info from '@/components/info/Info';
+import PersonaDefaultToggle from '@/components/personas/PersonaDefaultToggle';
+import { useEditPersonas } from '@/hooks/user/useEditPersonas';
 import {
-  personaBrandInitialValues,
-  PersonaBrandSchema,
+  PersonasFormData,
+  // personasInitialValues,
+  PersonasSchema,
 } from '@/models/user/personaBrand.model';
+import { useAppSelector } from '@/redux/store';
 import Image from 'next/image';
 import React from 'react';
 
 const PostSettings = () => {
-  const handleSubmit = () => {};
+  const { editPersonas, loading: saving } = useEditPersonas();
+
+  const personas = useAppSelector((state) => state.personas);
+
+  const handleSubmit = (values: PersonasFormData) => {
+    editPersonas(values);
+  };
 
   return (
     <div className="p-3 md:p-4 rounded-xl bg-blue-400/10 border-blue-300/50 w-full">
       <div>
-        <h3 className="text-lg">Personas</h3>
+        <h3 className="text-lg mb-4">Personas</h3>
 
         <FormComponent
-          initialValues={personaBrandInitialValues}
-          schema={PersonaBrandSchema}
+          initialValues={personas}
+          schema={PersonasSchema}
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col md:flex-row">
@@ -33,10 +43,11 @@ const PostSettings = () => {
                 height={100}
               />
             </div>
-            <TextInputField
-              name="persona1"
-              placeholder="Briefly describe a persona to tailor your posts towards..."
-              label="1"
+            <TextAreaInputField
+              name="persona1.description"
+              placeholder="Briefly describe a persona..."
+              label="Persona 1"
+              className="border-2 rounded-md border-white/10"
             />
           </div>
 
@@ -49,21 +60,18 @@ const PostSettings = () => {
                 height={100}
               />
             </div>
-            <TextInputField
-              name="persona2"
-              placeholder="Briefly describe a persona to tailor your posts towards..."
-              label="2"
+            <TextAreaInputField
+              name="persona2.description"
+              placeholder="Briefly describe a persona..."
+              label="Persona 2"
+              className="border-2 rounded-md border-white/10"
             />
           </div>
 
-          <h3 className="text-lg">Brand Voice</h3>
+          {/* <h3 className="text-lg">Brand Voice</h3>
 
-          <div className="flex gap-3 flex-col md:flex-row">
-            <TextInputField
-              name="brand1"
-              placeholder="Give your brand a voice..."
-            />
-            <div className="w-[70px] md:w-[100px] h-[70px] md:h-[100px] overflow-hidden flex-center rounded-xl relative md:scale-x-[-1]">
+          <div className="flex gap-3 flex-col">
+            <div className="w-[70px] md:w-[100px] h-[70px] md:h-[100px] overflow-hidden flex-center rounded-xl relative">
               <Image
                 src={'/img/speakers.png'}
                 alt="profileImage"
@@ -71,7 +79,12 @@ const PostSettings = () => {
                 height={100}
               />
             </div>
-          </div>
+            <TextAreaInputField
+              name="brand"
+              placeholder="Give your brand a voice..."
+              className="border-2 rounded-md border-white/10"
+            />
+          </div> */}
           <div className="flex justify-end">
             <Info
               color="blue"
@@ -80,11 +93,20 @@ const PostSettings = () => {
           </div>
 
           <div className="flex justify-end">
-            <ValidatingFormSubmitButton className="w-fit">
+            <ValidatingFormSubmitButton
+              loading={saving}
+              disabled={saving}
+              className="w-fit"
+            >
               Save
             </ValidatingFormSubmitButton>
           </div>
         </FormComponent>
+        <h3 className="text-lg my-4">
+          Set Default Persona <br />
+          <span className="text-xs text-gray-300">{`(this will be used to enhance and contruct your posts)`}</span>
+        </h3>
+        <PersonaDefaultToggle className="mt-3" />
       </div>
     </div>
   );

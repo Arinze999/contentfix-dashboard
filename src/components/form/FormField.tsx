@@ -259,7 +259,7 @@ export const TextAreaInputField: React.FC<BaseFieldProps> = ({
     <div className={clsx(className, 'mb-6 w-full')}>
       <label
         htmlFor={name}
-        className="block text-sm font-semibold text-borderGray/10 mb-2"
+        className="block text-sm font-semibold text-borderGray/10 mb-2 px-3"
       >
         {label}
       </label>
@@ -278,7 +278,7 @@ export const TextAreaInputField: React.FC<BaseFieldProps> = ({
           readOnly={readOnly}
           rows={5}
           className={clsx(
-            'block w-full h-12 scrollbar-hide rounded-md py-3 bg-borderGray/10 focus:outline-none focus:ring-2 focus:ring-mainBlue resize-y',
+            'block w-full h-12 scrollbar-hide rounded-md py-3 bg-borderGray/10 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-mainBlue resize-y',
             hasError ? 'border-red-500' : 'border-gray-300',
             lpiSrc ? 'pl-10' : 'pl-3',
             'pr-3'

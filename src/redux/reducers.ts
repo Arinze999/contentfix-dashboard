@@ -2,11 +2,13 @@ import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import userDataReducer from './slices/userDataSlice';
 import postsReducer from './slices/postsSlice';
+import personasReducer from './slices/personasSlice';
 
 const appReducer = combineReducers({
   auth: authReducer,
   userData: userDataReducer,
   posts: postsReducer,
+   personas: personasReducer
 });
 
 const rootReducer = (

@@ -33,7 +33,7 @@ const AccountSettings = () => {
   }, [failed]);
 
   return (
-    <div className="p-3 md:p-4 h-fit rounded-xl bg-blue-400/10 border-blue-300/50 w-full col-start gap-6 max-w-[500px]">
+    <div className="p-3 md:p-4 h-fit rounded-xl bg-blue-400/10 border-blue-300/50 w-full col-start gap-6 lg:max-w-[500px]">
       <FormComponent
         initialValues={profileImageValues}
         schema={ProfileImageSchema}

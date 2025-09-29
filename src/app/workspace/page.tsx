@@ -22,6 +22,7 @@ const WorkspacePage = () => {
       <Banner
         title="Overview"
         description="Take a look at what you and other users have been up to"
+        icon='overview'
       />
       <div className="flex flex-col min-[1200px]:flex-row gap-6">
         <Stats />

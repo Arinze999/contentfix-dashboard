@@ -10,6 +10,8 @@ import { CopyOutline } from '../icons/CopyOutline';
 import { Save } from '../icons/Save';
 import { useSavePost } from '@/hooks/prompt/save/useSavePost';
 import { Saved } from '../icons/Saved';
+import { useAppSelector } from '@/redux/store';
+import Image from 'next/image';
 
 // cheap, stable hash for strings
 const hashString = (s: string) => {
@@ -25,6 +27,16 @@ const ResultScreen: React.FC = () => {
   const { loading, result, failed } = useSendPromptContext();
 
   const { savePost, loading: savingPost } = useSavePost();
+
+  const personas = useAppSelector((state) => state.personas);
+
+  const { key: activeKey, data } = personas.persona1.default
+    ? { key: 'persona1' as const, data: personas.persona1 }
+    : personas.persona2.default
+    ? { key: 'persona2' as const, data: personas.persona2 }
+    : { key: null, data: null };
+
+  console.log(data);
 
   // container for markdown content that gets animated
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -211,7 +223,8 @@ const ResultScreen: React.FC = () => {
             title="Save content"
             aria-busy={savingPost}
           >
-            {saved ? <Saved /> : <Save />} {savingPost ? 'Saving…' : saved ? 'Saved!' : 'Save'}
+            {saved ? <Saved /> : <Save />}{' '}
+            {savingPost ? 'Saving…' : saved ? 'Saved!' : 'Save'}
           </button>
         </div>
       )}
@@ -229,6 +242,23 @@ const ResultScreen: React.FC = () => {
           className="block w-full break-words whitespace-pre-wrap leading-relaxed"
           key={mdKey}
         >
+          {activeKey && (
+            <div>
+              <div className="w-[70px] md:w-[90px] h-[70px] md:h-[90px] overflow-hidden flex-center rounded-xl relative">
+                <Image
+                  src={`/img/${
+                    activeKey === 'persona1' ? 'person1' : 'person2'
+                  }.png`}
+                  alt="profileImage"
+                  width={100}
+                  height={100}
+                />
+                <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10 flex justify-end items-end">
+                  <small className="text-gray-300">{activeKey}</small>
+                </div>
+              </div>
+            </div>
+          )}
           {markdown}
         </div>
       )}

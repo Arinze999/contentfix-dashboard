@@ -16,6 +16,7 @@ const SettingsPage = () => {
       <Banner
         title="Settings"
         description="Customize your account and Preferences"
+        icon="settings"
       />
       <div className="flex flex-col lg:flex-row gap-3 my-4">
         <AccountSettings />

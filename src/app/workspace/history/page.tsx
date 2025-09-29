@@ -39,7 +39,11 @@ const HistoryPage = () => {
 
   return (
     <div className="default-margin">
-      <Banner title="History" description="Here are your enhanced posts so far" />
+      <Banner
+        title="History"
+        description="Here are your enhanced posts so far"
+        icon="doc"
+      />
       {posts ? (
         <div className="flex gap-4 my-4 h-full">
           <ul className={`col-start gap-4 ${isMobile ? 'w-full' : ''}`}>

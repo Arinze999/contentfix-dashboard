@@ -99,6 +99,7 @@ const NewContent: React.FC = () => {
             label=""
             name="message"
             className="mb-3"
+            h='h-12'
           />
 
           <div className="flex justify-between">

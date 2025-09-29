@@ -42,12 +42,13 @@ const PostSettings = () => {
                 width={100}
                 height={100}
               />
+              <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10" />
             </div>
             <TextAreaInputField
               name="persona1.description"
               placeholder="Briefly describe a persona..."
               label="Persona 1"
-              className="border-2 rounded-md border-white/10"
+              className="border-2 rounded-md border-white/10 min-h-30"
             />
           </div>
 
@@ -59,6 +60,7 @@ const PostSettings = () => {
                 width={100}
                 height={100}
               />
+              <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10" />
             </div>
             <TextAreaInputField
               name="persona2.description"

@@ -20,6 +20,7 @@ interface BaseFieldProps {
   /** Override wrapper styles */
   className?: string;
   required?: boolean;
+  h?: string;
 }
 
 /**
@@ -248,6 +249,7 @@ export const TextAreaInputField: React.FC<BaseFieldProps> = ({
   lpiSrc,
   readOnly = false,
   className = '',
+  h,
 }) => {
   const [field, meta] = useField<string>({
     name,
@@ -278,7 +280,7 @@ export const TextAreaInputField: React.FC<BaseFieldProps> = ({
           readOnly={readOnly}
           rows={5}
           className={clsx(
-            'block w-full h-12 scrollbar-hide rounded-md py-3 bg-borderGray/10 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-mainBlue resize-y',
+            `block w-full ${h} scrollbar-hide rounded-md py-3 bg-borderGray/10 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-mainBlue resize-y`,
             hasError ? 'border-red-500' : 'border-gray-300',
             lpiSrc ? 'pl-10' : 'pl-3',
             'pr-3'

@@ -1,4 +1,3 @@
-// src/middleware.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSessionAndResponse } from '@/utils/supabase/middleware';
 

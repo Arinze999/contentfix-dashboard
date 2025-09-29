@@ -7,7 +7,7 @@ import ResultScreen from '@/components/newcontent/ResultScreen';
 const page = () => {
   return (
     <div className="default-margin h-[calc(100dvh-0.5rem)] md:h-[calc(100dvh-5rem)] overflow-hidden pb-55 relative">
-      <Banner title="New Post" description="Create new post here" />
+      <Banner title="New Post" description="Create new post here" icon='edit'/>
       <SendPromptProvider>
         <div className="relative w-full col-start h-[80%] md:h-[70%] my-3 shadow-xl">
           {/* Scrollable content */}

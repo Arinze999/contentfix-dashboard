@@ -229,20 +229,7 @@ const ResultScreen: React.FC = () => {
         </div>
       )}
 
-      {loading ? (
-        <ResultSkeleton />
-      ) : failed ? (
-        <p className="text-red-400">
-          Failed. Please retry shortly — DeepSeek servers are currently busy…
-        </p>
-      ) : (
-        <div
-          ref={containerRef}
-          // keep the animated content isolated here
-          className="block w-full break-words whitespace-pre-wrap leading-relaxed"
-          key={mdKey}
-        >
-          {activeKey && (
+       {activeKey && (
             <div>
               <div className="w-[70px] md:w-[90px] h-[70px] md:h-[90px] overflow-hidden flex-center rounded-xl relative">
                 <Image
@@ -259,6 +246,20 @@ const ResultScreen: React.FC = () => {
               </div>
             </div>
           )}
+
+      {loading ? (
+        <ResultSkeleton />
+      ) : failed ? (
+        <p className="text-red-400">
+          Failed. Please retry shortly — DeepSeek servers are currently busy…
+        </p>
+      ) : (
+        <div
+          ref={containerRef}
+          // keep the animated content isolated here
+          className="block w-full break-words whitespace-pre-wrap leading-relaxed"
+          key={mdKey}
+        >
           {markdown}
         </div>
       )}

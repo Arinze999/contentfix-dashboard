@@ -19,7 +19,7 @@ const Banner: React.FC<IBanner> = ({ title, description, icon }) => {
         />
       </div>
       <div>
-        <h2 className="text-[18px] md:text-[24px] font-semibold text-gray-300">
+        <h2 className="text-[18px] md:text-[24px] font-semibold gradient8">
           {title}
         </h2>
         <div className="flex flex-col gap-2 w-full md:w-[30rem] text-[16px] md:text-[18px] text-lightBlue/50 font-normal">

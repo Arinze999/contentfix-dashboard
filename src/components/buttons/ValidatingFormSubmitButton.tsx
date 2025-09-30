@@ -40,7 +40,7 @@ const ValidatingFormSubmitButton: React.FC<IValidatingFormSubmitButton> = ({
   `;
 
   const disabledStyles = `
-    bg-gray-400 opacity-75
+    bg-gray-400 opacity-55
   `;
 
   return (

@@ -140,7 +140,7 @@ const NewContent: React.FC = () => {
             <ValidatingFormSubmitButton
               disabled={loading}
               loading={loading}
-              className="md:w-[7.5rem] w-[4rem] h-10"
+              className="md:w-[7.5rem] w-[4rem] h-10 gradientBgBtn"
             >
               <span className="hidden md:inline min-w-[16px]">Enhance</span>{' '}
               {!loading && <StarsC />}

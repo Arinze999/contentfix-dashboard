@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     'ContentFix Dashboard',
   ],
   metadataBase: new URL('https://contentfix-dashboard.vercel.app/'),
+
   openGraph: {
     title: 'ContentFix Dashboard – Your Content Hub',
     description:
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     siteName: 'ContentFix Dashboard',
     images: [
       {
-        url: 'https://contentfix-dashboard.vercel.app/og-image.png',
+        url: 'https://t4.ftcdn.net/jpg/05/34/12/71/360_F_534127141_WLe9sk0MTVS5PxsB3yROZ3lItE4evzr7.jpg',
         width: 1200,
         height: 630,
         alt: 'ContentFix Dashboard Preview',
@@ -51,13 +52,16 @@ export const metadata: Metadata = {
     ],
     type: 'website',
   },
+
   twitter: {
     card: 'summary_large_image',
     title: 'ContentFix Dashboard – Manage & Generate Content',
     description:
       'Use the ContentFix Dashboard to organize conversions, review history, and generate fresh posts for any platform.',
-    images: ['https://contentfix-dashboard.vercel.app/twitter-card.png'],
-    creator: '@your_twitter_handle',
+    images: [
+      'https://t4.ftcdn.net/jpg/05/34/12/71/360_F_534127141_WLe9sk0MTVS5PxsB3yROZ3lItE4evzr7.jpg',
+    ],
+    creator: '@arinze',
   },
 };
 

@@ -2,14 +2,14 @@
 import React from 'react';
 import StatsCard from './StatsCard';
 import { useAppSelector } from '@/redux/store';
-import { calculateTimeAgo } from '@/utils/utils';
+import { selectTotalStatistics } from '@/redux/slices/statisticsSlice';
 
 const Stats = () => {
   const posts = useAppSelector((state) => state.posts);
 
   const postsUpdatedAt = useAppSelector((s) => s.userData.posts_updated_at);
 
-  console.log(postsUpdatedAt);
+  const total = useAppSelector(selectTotalStatistics);
 
   return (
     <div className="bg-white/5 p-4 rounded-xl w-full md:w-fit">
@@ -17,16 +17,11 @@ const Stats = () => {
       <div className="grid grid-cols-2 gap-[2rem] md:gap-[3rem]  grid-flow-col overflow-auto [&::-webkit-scrollbar]:hidden">
         <StatsCard
           color="blue"
-          title="Total Posts"
+          title="Your Posts"
           info={(posts && posts.length) || 0}
         />
 
-        <StatsCard
-          color="purple"
-          title="Last saved post"
-          info={calculateTimeAgo(postsUpdatedAt ?? '')}
-          date
-        />
+        <StatsCard color="purple" title="Posts: all Users" info={total} />
       </div>
     </div>
   );

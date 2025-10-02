@@ -3,12 +3,14 @@ import authReducer from './slices/authSlice';
 import userDataReducer from './slices/userDataSlice';
 import postsReducer from './slices/postsSlice';
 import personasReducer from './slices/personasSlice';
+import statisticsReducer from './slices/statisticsSlice';
 
 const appReducer = combineReducers({
   auth: authReducer,
   userData: userDataReducer,
   posts: postsReducer,
-   personas: personasReducer
+   personas: personasReducer,
+   statistics: statisticsReducer,
 });
 
 const rootReducer = (

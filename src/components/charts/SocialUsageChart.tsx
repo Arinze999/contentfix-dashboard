@@ -11,42 +11,109 @@ import {
   Tooltip,
 } from 'recharts';
 import { gsap } from 'gsap';
+import { useAppSelector } from '@/redux/store';
+import {
+  computeTotal,
+  selectStatistics,
+  selectTotalStatistics,
+} from '@/redux/slices/statisticsSlice';
+import { useDispatch } from 'react-redux';
 
-type Timeframe = 'week' | 'month';
-type Row = { platform: 'LinkedIn' | 'X' | 'Threads' | 'Insta' | 'Official'; value: number };
+type Timeframe = 'allTime' | 'month';
+type Row = {
+  platform: 'linkedin' | 'twitter' | 'threads' | 'Insta' | 'official';
+  value: number;
+};
 
-const MOCK: Record<Timeframe, Row[]> = {
-  week: [
-    { platform: 'LinkedIn',  value: 86 },
-    { platform: 'X',         value: 52 },
-    { platform: 'Threads',   value: 38 },
-    { platform: 'Insta', value: 45 },
-    { platform: 'Official',  value: 21 },
-  ],
-  month: [
-    { platform: 'LinkedIn',  value: 92 },
-    { platform: 'X',         value: 47 },
-    { platform: 'Threads',   value: 34 },
-    { platform: 'Insta', value: 59 },
-    { platform: 'Official',  value: 28 },
-  ],
+const toInt = (v?: string | null) => {
+  const n = Number(v ?? 0);
+  return Number.isFinite(n) ? n : 0;
 };
 
 export default function SocialUsageChart() {
-  const [timeframe, setTimeframe] = useState<Timeframe>('week');
-  const data = useMemo(() => MOCK[timeframe], [timeframe]);
+  const dispatch = useDispatch();
+
+  const stats = useAppSelector(selectStatistics);
+
+  const total = useAppSelector(selectTotalStatistics);
+
+  useEffect(() => {
+    if (stats.data) dispatch(computeTotal());
+  }, [stats.data, dispatch]);
+
+  const counts = useMemo(
+    () => ({
+      linkedin: toInt(stats.data?.linkedin),
+      twitter: toInt(stats.data?.twitter),
+      threads: toInt(stats.data?.threads),
+      official: toInt(stats.data?.official),
+    }),
+    [stats.data]
+  );
+
+  const totalNum = useMemo(() => {
+    const t = toInt(total);
+    // fallback to recompute if slice total wasn't set yet
+    return t > 0
+      ? t
+      : counts.linkedin + counts.twitter + counts.threads + counts.official;
+  }, [total, counts]);
+
+  const allTimePercentData: Row[] = useMemo(() => {
+    const t = totalNum;
+    if (t === 0) {
+      return [
+        { platform: 'linkedin', value: 0 },
+        { platform: 'twitter', value: 0 },
+        { platform: 'threads', value: 0 },
+        { platform: 'official', value: 0 },
+      ];
+    }
+    const pct = (n: number) => Math.round((n / t) * 100);
+    return [
+      { platform: 'linkedin', value: pct(counts.linkedin) },
+      { platform: 'twitter', value: pct(counts.twitter) },
+      { platform: 'threads', value: pct(counts.threads) },
+      { platform: 'official', value: pct(counts.official) },
+    ];
+  }, [counts, totalNum]);
+
+  const MOCK: Record<Timeframe, Row[]> = useMemo(
+    () => ({
+      allTime: allTimePercentData,
+      month: [
+        { platform: 'linkedin', value: 92 },
+        { platform: 'twitter', value: 47 },
+        { platform: 'threads', value: 34 },
+        { platform: 'official', value: 28 },
+      ],
+    }),
+    [allTimePercentData]
+  );
+
+  const [timeframe, setTimeframe] = useState<Timeframe>('allTime');
+  const data = useMemo(() => MOCK[timeframe], [MOCK, timeframe]);
 
   const chartRef = useRef<HTMLDivElement | null>(null);
+
 
   // Animate bars + line on dataset change
   useEffect(() => {
     if (!chartRef.current) return;
 
-    const rects = chartRef.current.querySelectorAll<SVGRectElement>('rect.recharts-rectangle');
-    const linePath = chartRef.current.querySelector<SVGPathElement>('path.recharts-line-curve');
+    const rects = chartRef.current.querySelectorAll<SVGRectElement>(
+      'rect.recharts-rectangle'
+    );
+    const linePath = chartRef.current.querySelector<SVGPathElement>(
+      'path.recharts-line-curve'
+    );
 
     // Bars: grow from bottom (scaleY) and fade in
-    gsap.set(rects, { transformOrigin: 'center bottom', scaleY: 0.1, opacity: 0.2 });
+    gsap.set(rects, {
+      transformOrigin: 'center bottom',
+      scaleY: 0.1,
+      opacity: 0.2,
+    });
     gsap.to(rects, {
       scaleY: 1,
       opacity: 1,
@@ -58,7 +125,11 @@ export default function SocialUsageChart() {
     // Line: draw from 0 length
     if (linePath) {
       const length = linePath.getTotalLength();
-      gsap.set(linePath, { strokeDasharray: length, strokeDashoffset: length, opacity: 1 });
+      gsap.set(linePath, {
+        strokeDasharray: length,
+        strokeDashoffset: length,
+        opacity: 1,
+      });
       gsap.to(linePath, {
         strokeDashoffset: 0,
         duration: 0.7,
@@ -71,19 +142,28 @@ export default function SocialUsageChart() {
   return (
     <div className="w-full rounded-xl border border-white/10 bg-card/20 p-4 md:p-6">
       <div className="mb-4 flex items-center gap-3">
-        <h3 className="text-sm">Platform usage%</h3>
+        <h3 className="text-sm">Platform usage%, Total across platforms = {total}</h3>
         <div className="ml-auto inline-flex rounded-lg border border-white/10 p-1">
           <button
-            onClick={() => setTimeframe('week')}
+            onClick={() => setTimeframe('allTime')}
             className={`px-3 py-1 text-xs md:text-sm rounded-md transition-colors
-              ${timeframe === 'week' ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white'}`}
+              ${
+                timeframe === 'allTime'
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/70 hover:text-white'
+              }`}
           >
-            Past week
+            All Time
           </button>
           <button
             onClick={() => setTimeframe('month')}
-            className={`px-3 py-1 text-xs md:text-sm rounded-md transition-colors
-              ${timeframe === 'month' ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white'}`}
+            disabled
+            className={`px-3 py-1 text-xs md:text-sm rounded-md transition-colors disabled:cursor-not-allowed disabled:opacity-50
+              ${
+                timeframe === 'month'
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/70 hover:text-white'
+              }`}
           >
             Past month
           </button>
@@ -104,7 +184,11 @@ export default function SocialUsageChart() {
               </linearGradient>
             </defs>
 
-            <CartesianGrid stroke="currentColor" className="text-white/10" vertical={false} />
+            <CartesianGrid
+              stroke="currentColor"
+              className="text-white/10"
+              vertical={false}
+            />
             <XAxis
               dataKey="platform"
               tick={{ fill: 'currentColor' }}
@@ -139,9 +223,9 @@ export default function SocialUsageChart() {
             <Bar
               dataKey="value"
               fill="url(#barFillV)"
-              barSize={12}                 // slimmer bars
-              radius={[6, 6, 0, 0]}        // rounded tops
-              isAnimationActive={false}    // GSAP handles animation
+              barSize={12} // slimmer bars
+              radius={[6, 6, 0, 0]} // rounded tops
+              isAnimationActive={false} // GSAP handles animation
             />
           </ComposedChart>
         </ResponsiveContainer>

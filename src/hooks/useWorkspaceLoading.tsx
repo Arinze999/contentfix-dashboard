@@ -5,12 +5,14 @@ import { useAppSelector } from '@/redux/store';
 import { useGetUserData } from './user/useGetUserData';
 import { useGetPosts } from './user/posts/useGetPosts';
 import { useGetPersonas } from './user/useGetPersonas';
+import { useGetStatistics } from './user/posts/useGetStatistics';
 
 export function useWorkspaceLoading() {
   const auth = useAppSelector((s) => s.auth);
   const { fetchUserData } = useGetUserData();
   const { fetchPosts } = useGetPosts();
   const { fetchPersonas } = useGetPersonas();
+  const { fetchStatistics } = useGetStatistics();
 
   const [loading, setLoading] = useState(false);
   const runTokenRef = useRef<symbol | null>(null);
@@ -25,12 +27,13 @@ export function useWorkspaceLoading() {
         fetchUserData(uid),
         fetchPosts(uid),
         fetchPersonas(),
+        fetchStatistics(),
       ]);
 
       // avoid setting state if a newer run started
       if (runTokenRef.current === token) setLoading(false);
     },
-    [fetchUserData, fetchPosts, fetchPersonas]
+    [fetchUserData, fetchPosts, fetchPersonas, fetchStatistics]
   );
 
   useEffect(() => {

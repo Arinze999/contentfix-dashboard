@@ -18,7 +18,7 @@ const SettingsPage = () => {
         description="Customize your account and Preferences"
         icon="settings"
       />
-      <div className="flex flex-col lg:flex-row gap-3 my-4">
+      <div className="flex flex-col lg:flex-row gap-3 my-8">
         <AccountSettings />
         <PostSettings />
       </div>

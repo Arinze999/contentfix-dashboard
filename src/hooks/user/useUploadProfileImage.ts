@@ -106,7 +106,7 @@ export function useUploadProfileImage() {
         dispatch(setAvatarUrl(publicUrl));
         if (updatedAt) dispatch(setUpdatedAt(updatedAt));
 
-        toast.success('Profile image updated ✅', { autoClose: 3000 });
+        toast.success('Profile image updated', { autoClose: 3000 });
         return publicUrl;
       } catch (err: any) {
         setFailed(true);

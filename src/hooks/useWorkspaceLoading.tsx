@@ -6,6 +6,7 @@ import { useGetUserData } from './user/useGetUserData';
 import { useGetPosts } from './user/posts/useGetPosts';
 import { useGetPersonas } from './user/useGetPersonas';
 import { useGetStatistics } from './user/posts/useGetStatistics';
+import { useGetRating } from './user/useGetRating';
 
 export function useWorkspaceLoading() {
   const auth = useAppSelector((s) => s.auth);
@@ -13,6 +14,7 @@ export function useWorkspaceLoading() {
   const { fetchPosts } = useGetPosts();
   const { fetchPersonas } = useGetPersonas();
   const { fetchStatistics } = useGetStatistics();
+  const { fetchRating } = useGetRating();
 
   const [loading, setLoading] = useState(false);
   const runTokenRef = useRef<symbol | null>(null);
@@ -28,12 +30,13 @@ export function useWorkspaceLoading() {
         fetchPosts(uid),
         fetchPersonas(),
         fetchStatistics(),
+        fetchRating(uid),
       ]);
 
       // avoid setting state if a newer run started
       if (runTokenRef.current === token) setLoading(false);
     },
-    [fetchUserData, fetchPosts, fetchPersonas, fetchStatistics]
+    [fetchUserData, fetchPosts, fetchPersonas, fetchStatistics, fetchRating]
   );
 
   useEffect(() => {

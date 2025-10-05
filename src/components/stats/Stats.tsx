@@ -7,8 +7,6 @@ import { selectTotalStatistics } from '@/redux/slices/statisticsSlice';
 const Stats = () => {
   const posts = useAppSelector((state) => state.posts);
 
-  const postsUpdatedAt = useAppSelector((s) => s.userData.posts_updated_at);
-
   const total = useAppSelector(selectTotalStatistics);
 
   return (

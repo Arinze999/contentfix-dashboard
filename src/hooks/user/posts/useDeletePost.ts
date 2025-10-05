@@ -55,7 +55,7 @@ export function useDeletePost() {
         dispatch(removePost(postId));
         if (ts) dispatch(setPostsUpdatedAt(ts));
 
-        toast.success('Post deleted ✅', { autoClose: 3000 });
+        toast.success('Post deleted', { autoClose: 3000 });
         return deletedPost;
       } catch (err: any) {
         setFailed(true);

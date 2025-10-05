@@ -4,13 +4,15 @@ import userDataReducer from './slices/userDataSlice';
 import postsReducer from './slices/postsSlice';
 import personasReducer from './slices/personasSlice';
 import statisticsReducer from './slices/statisticsSlice';
+import ratingReducer from './slices/ratingSlice';
 
 const appReducer = combineReducers({
   auth: authReducer,
   userData: userDataReducer,
   posts: postsReducer,
-   personas: personasReducer,
-   statistics: statisticsReducer,
+  personas: personasReducer,
+  statistics: statisticsReducer,
+  rating: ratingReducer,
 });
 
 const rootReducer = (

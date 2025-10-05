@@ -66,7 +66,7 @@ export function useEditProfile() {
         dispatch(setUsername(data.username ?? nextUsername));
         if (data?.updated_at) dispatch(setUpdatedAt(data.updated_at));
 
-        toast.success('Profile updated ✅', { autoClose: 3000 });
+        toast.success('Profile updated', { autoClose: 3000 });
         return data?.username ?? nextUsername;
       } catch (err: any) {
         setFailed(true);

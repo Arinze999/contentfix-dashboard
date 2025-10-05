@@ -28,7 +28,7 @@ export const FormComponent: React.FC<IFormComponent> = ({
       enableReinitialize={true}
     >
       <Form
-        className={`${className} grid gap-[24px] w-full grid-cols-1`}
+        className={`${className} grid gap-[16px] md:gap-[24px] w-full grid-cols-1`}
         autoComplete={autoComplete}
       >
         {children}

@@ -50,7 +50,7 @@ export function useSetActivePersona() {
         toast.success(
           `Active persona set to ${
             which === 'persona1' ? 'Persona 1' : 'Persona 2'
-          } ✅`,
+          }`,
           { autoClose: 2500 }
         );
         return personas;

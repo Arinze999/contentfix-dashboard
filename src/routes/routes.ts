@@ -13,3 +13,4 @@ export const PERSONAS = 'personas';
 export const BRAND_VOICE = 'brand-voice';
 export const HISTORY = 'history';
 export const SETTINGS = 'settings';
+export const FEEDBACK = 'feedback';

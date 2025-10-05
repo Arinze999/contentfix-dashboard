@@ -59,7 +59,7 @@ export function useEditPersonas() {
 
         const updated = row?.personas as Personas;
         dispatch(setPersonas(updated));
-        toast.success('Personas saved ✅', { autoClose: 3000 });
+        toast.success('Personas saved', { autoClose: 3000 });
         return updated;
       } catch (err: any) {
         setFailed(true);

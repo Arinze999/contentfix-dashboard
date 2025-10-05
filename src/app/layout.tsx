@@ -23,23 +23,24 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'ContentFix Dashboard – Manage & Generate Content',
+  title: 'ContentFix Dashboard – Create, Enhance & Save AI Posts',
   description:
-    'The ContentFix Dashboard gives you a centralized space to manage your conversions, track history, and generate new content instantly.',
+    'The ContentFix Dashboard helps you create, enhance, and save AI-generated posts for your favorite social platforms like LinkedIn and Twitter. Manage your ideas, refine your drafts, and publish smarter with ContentFix.',
   keywords: [
-    'content dashboard',
-    'AI content management',
-    'content history',
-    'social media generator',
-    'newsletter generator',
+    'AI content creation',
+    'social media dashboard',
+    'LinkedIn post generator',
+    'Twitter content enhancer',
+    'AI writing tool',
+    'content management',
     'ContentFix Dashboard',
   ],
   metadataBase: new URL('https://contentfix-dashboard.vercel.app/'),
 
   openGraph: {
-    title: 'ContentFix Dashboard – Your Content Hub',
+    title: 'ContentFix Dashboard – Your AI-Powered Social Media Hub',
     description:
-      'Access all your content conversions in one place with the ContentFix Dashboard. Generate, manage, and track your posts effortlessly.',
+      'Create, enhance, and organize your AI-generated posts for LinkedIn, Twitter, and more—all from one intuitive dashboard.',
     url: 'https://contentfix-dashboard.vercel.app/',
     siteName: 'ContentFix Dashboard',
     images: [
@@ -55,9 +56,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'ContentFix Dashboard – Manage & Generate Content',
+    title: 'ContentFix Dashboard – Create, Enhance & Save AI Posts',
     description:
-      'Use the ContentFix Dashboard to organize conversions, review history, and generate fresh posts for any platform.',
+      'Use the ContentFix Dashboard to craft and polish AI-generated posts for LinkedIn, Twitter, and other platforms—all in one place.',
     images: [
       'https://t4.ftcdn.net/jpg/05/34/12/71/360_F_534127141_WLe9sk0MTVS5PxsB3yROZ3lItE4evzr7.jpg',
     ],

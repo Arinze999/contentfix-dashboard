@@ -21,10 +21,10 @@ const BasicInfo = () => {
 
   let dynamiceInitialValues = basicInfoInitialValues;
 
-  if (auth.username && auth.email && user.username) {
+  if (auth.username || auth.email || user.username) {
     dynamiceInitialValues = {
-      userName: user.username,
-      email: auth.email,
+      userName: user.username!,
+      email: auth.email!,
     };
   }
 

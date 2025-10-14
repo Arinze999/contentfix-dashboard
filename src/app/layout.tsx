@@ -6,6 +6,9 @@ import { createClient } from '@/utils/supabase/server';
 import HydrateAuth from '@/components/HydrateAuth';
 import Toaster from '@/components/Toaster';
 import FlashToast from '@/components/FlashToast';
+import { toSafeUser } from '@/utils/auth/toSafeUser';
+import { unstable_noStore as noStore } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -71,14 +74,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  noStore();
 
-  const safeUser = {
-    id: data.user?.id ?? null,
-    email: data.user?.email ?? null,
-    username: (data.user?.user_metadata as any)?.username ?? null,
-  };
+  const cookieStore = await cookies();
+  const justSignedIn = cookieStore.get('just_signed_in')?.value === '1';
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const safeUser = toSafeUser(user);
 
   return (
     <html lang="en">
@@ -89,7 +95,7 @@ export default async function RootLayout({
         <ReduxProvider>
           <HydrateAuth user={safeUser} /> {children}
           <Toaster />
-          <FlashToast />
+          <FlashToast justSignedIn={justSignedIn} />
         </ReduxProvider>
       </body>
     </html>

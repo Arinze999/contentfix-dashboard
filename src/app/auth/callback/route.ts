@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { ACCOUNT, SIGN_IN } from '@/routes/routes';
+import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,6 +45,18 @@ export async function GET(req: Request) {
       `${process.env.NEXT_PUBLIC_SITE_URL}${SIGNIN_PATH}?error=oauth_exchange`
     );
   }
+
+  // ----- OPTIONAL: signal the client to hydrate user immediately -----
+  // A tiny, short-lived, non-sensitive flag so your app can run a bootstrap
+  // thunk that calls GET /api/me and fills Redux with the same SafeUser.
+  (await cookies()).set('just_signed_in', '1', {
+    path: '/',
+    maxAge: 60,
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: true,
+  });
+  // -------------------------------------------------------------------
 
   return NextResponse.redirect(new URL(next, process.env.NEXT_PUBLIC_SITE_URL));
 }

@@ -14,3 +14,6 @@ export const BRAND_VOICE = 'brand-voice';
 export const HISTORY = 'history';
 export const SETTINGS = 'settings';
 export const FEEDBACK = 'feedback';
+
+// api routes
+export const ME = '/api/me';

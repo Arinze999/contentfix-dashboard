@@ -108,7 +108,11 @@ const PostSettings = () => {
           Set Default Persona <br />
           <span className="text-xs text-gray-300">{`(this will be used to enhance and contruct your posts)`}</span>
         </h3>
-        <PersonaDefaultToggle className="mt-3" />
+        {personas.persona1.description || personas.persona2.description ? (
+          <PersonaDefaultToggle className="mt-3" />
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );

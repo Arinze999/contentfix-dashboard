@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { toSafeUser } from '@/utils/auth/toSafeUser';
 
 export type SignInInput = {
   identifier: string; // email or phone
@@ -26,15 +27,10 @@ export async function signInAction(input: SignInInput) {
     if (error) {
       return { ok: false, message: error.message };
     }
-                                                                                 
+
     // SAFE user payload for client/Redux (no tokens)
     const u = data.user;
-    const user = {
-      id: u?.id ?? null,
-      email: u?.email ?? null,
-      username: (u?.user_metadata as any)?.username ?? null,
-    };
-
+    const user = toSafeUser(u);
     return { ok: true, message: 'Signed in successfully.', user };
   } catch (e: any) {
     return { ok: false, message: e?.message ?? 'Unknown error' };

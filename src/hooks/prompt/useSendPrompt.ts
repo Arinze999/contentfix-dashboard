@@ -14,14 +14,52 @@ type SendResult = {
   model?: string;
 };
 
+/* =========================
+   Retry helpers (tunable)
+   ========================= */
+const MAX_RETRIES = 10; // total attempts (1 initial + up to 9 retries)
+const BASE_DELAY_MS = 300; // starting backoff delay
+
+/** Retry for network errors (no status) and 5xx responses. */
+function shouldRetry(status?: number) {
+  return status === undefined || (status >= 500 && status < 600);
+}
+
+/** Exponential backoff with jitter; capped ~2000ms per step. */
+function backoffDelay(attempt: number) {
+  // attempt is 1-based: 1,2,3...
+  const exp = Math.min(2000, BASE_DELAY_MS * 2 ** (attempt - 1));
+  const jitter = Math.floor(Math.random() * 100);
+  return exp + jitter;
+}
+
+/** Sleep that is abort-safe (cleans up if AbortController aborts). */
+function sleep(ms: number, signal?: AbortSignal) {
+  return new Promise<void>((resolve, reject) => {
+    if (signal?.aborted)
+      return reject(new DOMException('Aborted', 'AbortError'));
+    const id = setTimeout(resolve, ms);
+    if (signal) {
+      const onAbort = () => {
+        clearTimeout(id);
+        reject(new DOMException('Aborted', 'AbortError'));
+      };
+      signal.addEventListener('abort', onAbort, { once: true });
+    }
+  });
+}
+
 export function useSendPrompt() {
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
   const [result, setResult] = useState<SendResult | null>(null);
+
+  // One AbortController per request; reused in retries and cancelled by reset().
   const abortRef = useRef<AbortController | null>(null);
 
   const personas = useAppSelector((s) => s.personas);
 
+  // Select active persona description (persona1 or persona2 that has default=true)
   const activePersonaDesc = useMemo(() => {
     if (!personas) return '';
     if (personas.persona1?.default)
@@ -30,6 +68,15 @@ export function useSendPrompt() {
       return personas.persona2.description?.trim() ?? '';
     return '';
   }, [personas]);
+
+  const LENGTHS = ['short', 'average', 'long'] as const;
+  type LengthKey = (typeof LENGTHS)[number];
+
+  function asLengthKey(x: unknown): LengthKey | null {
+    return typeof x === 'string' && (LENGTHS as readonly string[]).includes(x)
+      ? (x as LengthKey)
+      : null;
+  }
 
   /**
    * Build a single structured prompt from PromptDataType.
@@ -43,7 +90,6 @@ export function useSendPrompt() {
       lines.push(
         'You are ContentFix, an AI that rewrites text for selected platforms.',
         'Return only Markdown. For each selected platform, create a concise post.',
-        // 'Start each section with "### <Platform>". Then put the post on the next line.',
         'If an Audience Persona is provided, tailor word choice, examples, and emphasis to that persona while preserving the user intent.',
         'Follow the Output Rules for section headers and layout.',
         'Respect platform norms: LinkedIn (professional by default and clearly identify the header for the post and the body as well), Twitter/X (≤280 chars), Threads (casual), Official (formal memo/email style).'
@@ -54,7 +100,7 @@ export function useSendPrompt() {
         lines.push('', '### User Idea', v.message.trim());
       }
 
-      // Platforms (derive from booleans in the model)
+      // Platforms
       const platforms: string[] = [];
       if (v.linkedin) platforms.push('LinkedIn');
       if (v.twitter) platforms.push('Twitter/X');
@@ -64,9 +110,8 @@ export function useSendPrompt() {
         lines.push('', '### Platforms', platforms.join(', '));
       }
 
-      // Tones (optional array; if present, include)
+      // Tones (optional)
       if (Array.isArray(v.tones) && v.tones.length > 0) {
-        // If you want to cap at 2, uncomment: const tones = v.tones.slice(0, 2);
         const tones = v.tones;
         lines.push('', '### Tones', tones.join(', '));
       }
@@ -111,60 +156,56 @@ export function useSendPrompt() {
 
       // Length preference (apply ONLY to LinkedIn and Official) with word-count targets
       if (v.length && (v.linkedin || v.official)) {
-        // per-platform targets
-        const targets: string[] = [];
-        const li: string[] = [];
-        const off: string[] = [];
+        const len = asLengthKey(v.length);
 
-        // line rules (your existing intent)
-        const lineRule =
-          v.length === 'short'
-            ? 'Keep to ~1–2 lines.'
-            : v.length === 'average'
-            ? 'Keep to ~3–5 lines.'
-            : 'Allow ~6–10 lines.';
+        if (len) {
+          const targets: string[] = [];
+          const li: string[] = [];
+          const off: string[] = [];
 
-        // word-count ranges per platform & length
-        // Tune these if you want more/less verbosity.
-        const ranges: any = {
-          linkedin: {
-            short: '40–70 words',
-            average: '80–120 words',
-            long: '140–200 words',
-          },
-          official: {
-            short: '60–100 words',
-            average: '120–160 words',
-            long: '180–260 words',
-          },
-        } as const;
+          const lineRule =
+            v.length === 'short'
+              ? 'Keep to ~1–2 lines.'
+              : v.length === 'average'
+              ? 'Keep to ~3–5 lines.'
+              : 'Allow ~6–10 lines.';
 
-        if (v.linkedin) {
-          targets.push('LinkedIn');
-          li.push(
-            `- LinkedIn target: ${
-              ranges.linkedin[v.length]
-            } (use full sentences).`
+          const ranges = {
+            linkedin: {
+              short: '40–70 words',
+              average: '80–120 words',
+              long: '140–200 words',
+            },
+            official: {
+              short: '60–100 words',
+              average: '120–160 words',
+              long: '180–260 words',
+            },
+          } as const;
+
+          if (v.linkedin) {
+            targets.push('LinkedIn');
+            li.push(
+              `- LinkedIn target: ${ranges.linkedin[len]} (use full sentences).`
+            );
+          }
+          if (v.official) {
+            targets.push('Official');
+            off.push(
+              `- Official target: ${ranges.official[len]} (use full sentences).`
+            );
+          }
+
+          lines.push(
+            '',
+            '### Length Preference',
+            `Apply only to ${targets.join(' and ')} posts: ${lineRule}`,
+            'For these platforms, adhere to the following word-count ranges:',
+            ...(li.length ? li : []),
+            ...(off.length ? off : []),
+            'Ignore any length targets for Twitter/X and Threads.'
           );
         }
-        if (v.official) {
-          targets.push('Official');
-          off.push(
-            `- Official target: ${
-              ranges.official[v.length]
-            } (use full sentences).`
-          );
-        }
-
-        lines.push(
-          '',
-          '### Length Preference',
-          `Apply only to ${targets.join(' and ')} posts: ${lineRule}`,
-          'For these platforms, adhere to the following word-count ranges:',
-          ...(li.length ? li : []),
-          ...(off.length ? off : []),
-          'Ignore any length targets for Twitter/X and Threads.'
-        );
       }
 
       if (v.linkedin) {
@@ -212,11 +253,12 @@ export function useSendPrompt() {
 
   /**
    * Send the assembled prompt to the server route that calls DeepSeek.
-   * NOTE: API key stays server-side in /api/send-prompt (uses DEEPSEEKR1_APIKEY).
+   * Adds robust retry with exponential backoff (10 attempts) for 5xx & network errors.
+   * Respects AbortController across retries and delays.
    */
   const sendPrompt = useCallback(
     async (values: PromptDataType) => {
-      // Basic guard: message is required by schema, but double-check here.
+      // Guard: schema enforces message, but we double-check here.
       if (!values.message?.trim()) {
         setFailed('Message cannot be empty.');
         setResult(null);
@@ -228,30 +270,75 @@ export function useSendPrompt() {
       setFailed(null);
       setResult(null);
 
-      // Abort any in-flight request
+      // Abort any in-flight request and create a fresh controller for this cycle.
       abortRef.current?.abort();
       abortRef.current = new AbortController();
+      const signal = abortRef.current.signal;
 
       try {
         const prompt = buildPrompt(values);
+        let lastErr: unknown = null;
 
-        const res = await fetch('/api/send-prompt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt }),
-          signal: abortRef.current.signal,
-        });
+        // Attempts are 1..MAX_RETRIES
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+          if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
 
-        if (!res.ok) {
-          const text = await res.text().catch(() => '');
-          throw new Error(text || `Request failed: ${res.status}`);
+          try {
+            const res = await fetch('/api/send-prompt', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt }),
+              signal,
+            });
+
+            if (!res.ok) {
+              // Read body once for logging/message
+              const text = await res.text().catch(() => '');
+
+              // Retry only for 5xx
+              if (shouldRetry(res.status)) {
+                lastErr = new Error(text || `HTTP ${res.status}`);
+                if (attempt < MAX_RETRIES) {
+                  await sleep(backoffDelay(attempt), signal); // abort-safe wait
+                  continue;
+                }
+                throw lastErr; // out of retries
+              }
+
+              // 4xx or other non-retryable statuses: fail fast
+              throw new Error(text || `Request failed: ${res.status}`);
+            }
+
+            // Success
+            const data = (await res.json()) as SendResult;
+            setResult({
+              content: data.content,
+              id: data.id,
+              model: data.model,
+            });
+            lastErr = null;
+            break;
+          } catch (err: any) {
+            // Abort: stop immediately (do not setFailed)
+            if (err?.name === 'AbortError') throw err;
+
+            // Network errors (no status) are retryable
+            lastErr = err;
+            if (attempt < MAX_RETRIES && shouldRetry(undefined)) {
+              await sleep(backoffDelay(attempt), signal); // abort-safe wait
+              continue;
+            }
+            // Out of retries or non-retryable error surfaced above
+            throw lastErr;
+          }
         }
-
-        const data = (await res.json()) as SendResult;
-        setResult({ content: data.content, id: data.id, model: data.model });
       } catch (err: any) {
-        if (err?.name === 'AbortError') return; // quietly ignore
-        setFailed(err?.message || 'Unknown error');
+        if (err?.name === 'AbortError') return; // silent on cancel/reset
+        setFailed(
+          err?.message
+            ? `${err.message} (after ${MAX_RETRIES} attempts)`
+            : `Failed after ${MAX_RETRIES} attempts`
+        );
       } finally {
         setLoading(false);
       }
@@ -259,6 +346,7 @@ export function useSendPrompt() {
     [buildPrompt]
   );
 
+  /** Cancel any in-flight work and reset state. */
   const reset = useCallback(() => {
     setLoading(false);
     setFailed(null);
@@ -266,6 +354,7 @@ export function useSendPrompt() {
     abortRef.current?.abort();
   }, []);
 
+  // Stable return object to avoid re-renders.
   return useMemo(
     () => ({ sendPrompt, loading, failed, result, reset }),
     [sendPrompt, loading, failed, result, reset]

@@ -229,23 +229,31 @@ const ResultScreen: React.FC = () => {
         </div>
       )}
 
-       {activeKey && (
-            <div>
-              <div className="w-[70px] md:w-[90px] h-[70px] md:h-[90px] overflow-hidden flex-center rounded-xl relative">
-                <Image
-                  src={`/img/${
-                    activeKey === 'persona1' ? 'person1' : 'person2'
-                  }.png`}
-                  alt="profileImage"
-                  width={100}
-                  height={100}
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10 flex justify-end items-end">
-                  <small className="text-gray-300">{activeKey}</small>
-                </div>
-              </div>
+      {activeKey ? (
+        <div>
+          <div className="w-[70px] md:w-[90px] h-[70px] md:h-[90px] overflow-hidden flex-center rounded-xl relative">
+            <Image
+              src={`/img/${
+                activeKey === 'persona1' ? 'person1' : 'person2'
+              }.png`}
+              alt="profileImage"
+              width={100}
+              height={100}
+            />
+            <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10 flex justify-end items-end">
+              <small className="text-gray-300">{activeKey}</small>
             </div>
-          )}
+          </div>
+        </div>
+      ) : (
+        <div className="pointer-events-none inset-0 rounded-xl bg-gradient-to-r from-black/20 to-transparent z-10">
+          <small className="text-gray-300">
+            'You do not have a default persona, Go to Settings, create a persona
+            and assign as default.' <br />
+            This will help tailor your posts to a more consistent pattern.
+          </small>
+        </div>
+      )}
 
       {loading ? (
         <ResultSkeleton />

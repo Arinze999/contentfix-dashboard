@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'deepseek/deepseek-r1-0528:free'; // or your preferred variant
+const MODEL = 'openai/gpt-oss-20b:free';
 
 export async function POST(req: NextRequest) {
   try {
